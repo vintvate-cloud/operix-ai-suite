@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  Menu,
   Search,
   DollarSign,
   MessageCircle,
@@ -19,7 +21,13 @@ import {
   Bot,
   Hotel,
   Star,
+  Zap,
+  Shield,
+  Globe,
 } from "lucide-react";
+import { SiteNav, SiteFooter } from "@/components/site-nav";
+
+if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -40,86 +48,68 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-/* ----------------------------- Nav ----------------------------- */
-function Nav() {
-  return (
-    <header className="fixed top-3 inset-x-3 sm:inset-x-6 z-50 flex justify-center">
-      <nav className="w-full max-w-6xl bg-white rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex items-center justify-between pl-6 pr-2 py-2">
-        <a href="#" className="font-display text-2xl tracking-tight">
-          OPERIX
-        </a>
-        <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-foreground/80">
-          <a href="#product" className="hover:text-foreground">Product</a>
-          <a href="#solutions" className="hover:text-foreground">Solutions</a>
-          <a href="#pricing" className="hover:text-foreground">Pricing</a>
-          <a href="#enterprise" className="hover:text-foreground">Enterprise</a>
-          <a href="#resources" className="hover:text-foreground">Resources</a>
-          <a href="#login" className="hover:text-foreground">Login</a>
-        </div>
-        <div className="flex items-center gap-2">
-          <a
-            href="#demo"
-            className="hidden sm:inline-flex items-center bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
-          >
-            Book a demo
-          </a>
-          <button className="lg:hidden p-3 rounded-full hover:bg-muted" aria-label="Menu">
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-      </nav>
-    </header>
-  );
-}
-
 /* --------------------------- Hero --------------------------- */
 function Hero() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    const ctx = gsap.context(() => {
+      gsap.from(".hero-line", {
+        yPercent: 110,
+        duration: 1.1,
+        ease: "expo.out",
+        stagger: 0.08,
+      });
+      gsap.from(".hero-cta", { opacity: 0, y: 20, duration: 0.8, delay: 0.6, stagger: 0.1, ease: "power3.out" });
+      gsap.from(".hero-tile", {
+        scale: 0.6,
+        opacity: 0,
+        duration: 0.9,
+        delay: 0.8,
+        stagger: 0.07,
+        ease: "back.out(1.7)",
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="relative bg-foreground text-background pt-36 pb-24 px-4 overflow-hidden">
+    <section ref={ref} className="relative bg-foreground text-background pt-36 pb-24 px-4 overflow-hidden">
       <div className="max-w-6xl mx-auto text-center">
-        <p className="text-sm sm:text-base text-background/60 mb-6 animate-rise">
+        <p className="text-sm sm:text-base text-background/60 mb-6">
           The AI Operating System for Hospitality
         </p>
-        <h1 className="font-display text-[15vw] sm:text-[11vw] lg:text-[140px] leading-[0.9] animate-rise">
-          Run your entire
-          <br />
-          hotel from one
-          <br />
-          <span className="text-op-purple">AI platform</span>
+        <h1 className="font-display text-[15vw] sm:text-[11vw] lg:text-[140px] leading-[0.9]">
+          <span className="block overflow-hidden"><span className="hero-line inline-block">Run your entire</span></span>
+          <span className="block overflow-hidden"><span className="hero-line inline-block">hotel from one</span></span>
+          <span className="block overflow-hidden"><span className="hero-line inline-block text-op-purple">AI platform</span></span>
         </h1>
-        <p className="mt-10 mx-auto max-w-2xl text-lg sm:text-xl text-background/75 leading-relaxed">
+        <p className="hero-cta mt-10 mx-auto max-w-2xl text-lg sm:text-xl text-background/75 leading-relaxed">
           Manage reservations, housekeeping, revenue, staff, inventory, guest
           communication and accounting — from one intelligent platform.
         </p>
         <div className="mt-10 flex flex-wrap gap-3 justify-center">
-          <a
-            href="#trial"
-            className="bg-op-pink text-foreground rounded-full px-7 py-4 font-semibold hover:scale-[1.02] transition"
-          >
+          <a href="#trial" className="hero-cta bg-op-pink text-foreground rounded-full px-7 py-4 font-semibold hover:scale-[1.03] transition">
             Try for free
           </a>
-          <a
-            href="#demo"
-            className="bg-white/10 text-background rounded-full px-7 py-4 font-semibold hover:bg-white/20 transition"
-          >
+          <a href="#demo" className="hero-cta bg-white/10 text-background rounded-full px-7 py-4 font-semibold hover:bg-white/20 transition">
             Request a demo
           </a>
         </div>
-        <p className="mt-6 text-sm text-background/50">
+        <p className="hero-cta mt-6 text-sm text-background/50">
           14-day free trial · No credit card required
         </p>
 
-        {/* Floating dashboard mock blocks */}
         <div className="mt-20 grid grid-cols-4 sm:grid-cols-6 gap-3 max-w-3xl mx-auto">
-          <div className="aspect-square rounded-full bg-op-pink animate-float overflow-hidden flex items-center justify-center text-3xl">🛎️</div>
-          <div className="col-span-1 rounded-3xl bg-op-purple aspect-square flex items-center justify-center animate-float [animation-delay:0.5s]">
+          <div className="hero-tile aspect-square rounded-full bg-op-pink animate-float overflow-hidden flex items-center justify-center text-3xl">🛎️</div>
+          <div className="hero-tile col-span-1 rounded-3xl bg-op-purple aspect-square flex items-center justify-center animate-float [animation-delay:0.5s]">
             <Search className="text-foreground h-7 w-7" />
           </div>
-          <div className="col-span-2 rounded-3xl bg-op-pink/70 aspect-[2/1] animate-float [animation-delay:1s]" />
-          <div className="col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.2s]" />
-          <div className="col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.7s]" />
-          <div className="aspect-square rounded-full bg-op-beige animate-float [animation-delay:1.2s] overflow-hidden flex items-center justify-center text-3xl">🛏️</div>
-          <div className="rounded-3xl bg-op-orange aspect-square flex items-center justify-center animate-float [animation-delay:0.4s]">
+          <div className="hero-tile col-span-2 rounded-3xl bg-op-pink/70 aspect-[2/1] animate-float [animation-delay:1s]" />
+          <div className="hero-tile col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.2s]" />
+          <div className="hero-tile col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.7s]" />
+          <div className="hero-tile aspect-square rounded-full bg-op-beige animate-float [animation-delay:1.2s] overflow-hidden flex items-center justify-center text-3xl">🛏️</div>
+          <div className="hero-tile rounded-3xl bg-op-orange aspect-square flex items-center justify-center animate-float [animation-delay:0.4s]">
             <DollarSign className="text-white h-7 w-7" />
           </div>
         </div>
@@ -130,18 +120,7 @@ function Hero() {
 
 /* ------------------------- Trusted by ------------------------- */
 function TrustedBy() {
-  const logos = [
-    "MARRIOTT",
-    "HILTON",
-    "ACCOR",
-    "FOUR SEASONS",
-    "HYATT",
-    "AMAN",
-    "RITZ-CARLTON",
-    "ROSEWOOD",
-    "SOHO HOUSE",
-    "SIX SENSES",
-  ];
+  const logos = ["MARRIOTT","HILTON","ACCOR","FOUR SEASONS","HYATT","AMAN","RITZ-CARLTON","ROSEWOOD","SOHO HOUSE","SIX SENSES"];
   return (
     <section className="bg-background py-24 px-4">
       <div className="max-w-5xl mx-auto text-center">
@@ -150,13 +129,10 @@ function TrustedBy() {
           Trusted by 2,300+ hospitality teams
         </h2>
       </div>
-      <div className="mt-16 overflow-hidden">
+      <div className="mt-16 overflow-hidden marquee-mask">
         <div className="flex gap-12 animate-marquee w-max">
           {[...logos, ...logos].map((l, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm shrink-0"
-            >
+            <div key={i} className="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm shrink-0 hover-lift">
               <div className="h-9 w-9 rounded-lg bg-foreground text-background flex items-center justify-center text-xs font-bold">
                 {l[0]}
               </div>
@@ -166,24 +142,6 @@ function TrustedBy() {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ----------------------- Section header --------------------- */
-function SectionLead({
-  eyebrow,
-  title,
-}: {
-  eyebrow: string;
-  title: string;
-}) {
-  return (
-    <div className="max-w-4xl mx-auto text-center px-4">
-      <p className="text-muted-foreground mb-3">{eyebrow}</p>
-      <h2 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05]">
-        {title}
-      </h2>
-    </div>
   );
 }
 
@@ -224,17 +182,10 @@ function AICommandCenter() {
           </div>
           <div className="space-y-3">
             {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition ${
-                  i === active ? "bg-foreground text-background" : "bg-muted"
-                }`}
-              >
+              <div key={i} className={`flex items-center gap-3 rounded-2xl px-4 py-3 transition ${i === active ? "bg-foreground text-background" : "bg-muted"}`}>
                 <Sparkles className="h-4 w-4 shrink-0" />
                 <span className="text-sm font-medium">{m}</span>
-                {i === active && (
-                  <span className="ml-auto text-xs opacity-70">answering…</span>
-                )}
+                {i === active && (<span className="ml-auto text-xs opacity-70">answering…</span>)}
               </div>
             ))}
           </div>
@@ -272,14 +223,7 @@ function ReservationsCard() {
             </div>
             <div className="flex gap-2">
               {["Day", "Week", "Month"].map((t, i) => (
-                <button
-                  key={t}
-                  className={`text-xs px-3 py-1.5 rounded-full ${
-                    i === 1 ? "bg-foreground text-background" : "bg-muted"
-                  }`}
-                >
-                  {t}
-                </button>
+                <button key={t} className={`text-xs px-3 py-1.5 rounded-full ${i === 1 ? "bg-foreground text-background" : "bg-muted"}`}>{t}</button>
               ))}
             </div>
           </div>
@@ -290,16 +234,14 @@ function ReservationsCard() {
               { name: "Villa 02 · The Tanaka Party", status: "VIP", color: "bg-op-purple/30 text-purple-700" },
               { name: "Room 502 · J. Okonkwo", status: "Awaiting verification", color: "bg-op-peach text-orange-700" },
             ].map((r) => (
-              <div key={r.name} className="flex items-center justify-between rounded-2xl bg-muted/60 px-4 py-3">
+              <div key={r.name} className="flex items-center justify-between rounded-2xl bg-muted/60 px-4 py-3 hover-lift">
                 <div className="flex items-center gap-3">
                   <div className="h-9 w-9 rounded-full bg-foreground text-background flex items-center justify-center">
                     <Bed className="h-4 w-4" />
                   </div>
                   <span className="font-medium">{r.name}</span>
                 </div>
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${r.color}`}>
-                  {r.status}
-                </span>
+                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${r.color}`}>{r.status}</span>
               </div>
             ))}
           </div>
@@ -309,7 +251,6 @@ function ReservationsCard() {
   );
 }
 
-/* ----------------------- Housekeeping ----------------------- */
 function HousekeepingCard() {
   return (
     <section className="px-3 sm:px-6 py-6">
@@ -317,13 +258,9 @@ function HousekeepingCard() {
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="font-display text-5xl sm:text-7xl">Stay in control</h2>
           <p className="mt-6 text-lg max-w-xl mx-auto">
-            Keep rooms, queues and contracts tidy in one home. Save hours every day
-            with smart assignments and live status.
+            Keep rooms, queues and contracts tidy in one home. Save hours every day with smart assignments and live status.
           </p>
-          <a
-            href="#explore"
-            className="mt-8 inline-flex bg-foreground text-background rounded-full px-7 py-4 font-semibold"
-          >
+          <a href="#explore" className="mt-8 inline-flex bg-foreground text-background rounded-full px-7 py-4 font-semibold hover:scale-[1.03] transition">
             Explore housekeeping
           </a>
         </div>
@@ -333,7 +270,7 @@ function HousekeepingCard() {
             { label: "In progress", count: 17, color: "bg-op-pink" },
             { label: "Dirty", count: 23, color: "bg-foreground text-background" },
           ].map((c) => (
-            <div key={c.label} className="bg-white rounded-3xl p-6">
+            <div key={c.label} className="bg-white rounded-3xl p-6 hover-lift">
               <div className={`inline-flex items-center justify-center h-10 w-10 rounded-full ${c.color}`}>
                 <CheckCircle2 className="h-5 w-5" />
               </div>
@@ -347,7 +284,6 @@ function HousekeepingCard() {
   );
 }
 
-/* ----------------------- Revenue card ----------------------- */
 function RevenueCard() {
   const bars = [40, 65, 50, 80, 55, 90, 72];
   return (
@@ -356,8 +292,7 @@ function RevenueCard() {
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="font-display text-5xl sm:text-7xl">Grow revenue</h2>
           <p className="mt-6 text-lg max-w-xl mx-auto text-foreground/80">
-            Track ADR, RevPAR, occupancy, and forecasts. Let AI tune dynamic
-            pricing across every channel.
+            Track ADR, RevPAR, occupancy, and forecasts. Let AI tune dynamic pricing across every channel.
           </p>
         </div>
         <div className="mt-12 max-w-4xl mx-auto bg-white rounded-3xl p-8">
@@ -366,23 +301,15 @@ function RevenueCard() {
               <div className="text-sm text-muted-foreground">Revenue this month</div>
               <div className="text-4xl font-semibold">$1,284,930</div>
             </div>
-            <div className="flex gap-2 text-sm">
-              <span className="px-3 py-1 bg-op-success/20 text-emerald-700 rounded-full font-semibold">
-                <TrendingUp className="inline h-3.5 w-3.5 mr-1" /> +18.4%
-              </span>
-            </div>
+            <span className="px-3 py-1 bg-op-success/20 text-emerald-700 rounded-full font-semibold text-sm">
+              <TrendingUp className="inline h-3.5 w-3.5 mr-1" /> +18.4%
+            </span>
           </div>
           <div className="flex items-end gap-3 h-44">
-            {bars.map((h, i) => (
-              <div key={i} className="flex-1 rounded-t-2xl bg-foreground" style={{ height: `${h}%` }} />
-            ))}
+            {bars.map((h, i) => (<div key={i} className="flex-1 rounded-t-2xl bg-foreground" style={{ height: `${h}%` }} />))}
           </div>
           <div className="grid grid-cols-3 mt-6 gap-3 text-sm">
-            {[
-              { k: "ADR", v: "$312" },
-              { k: "RevPAR", v: "$271" },
-              { k: "Occupancy", v: "87%" },
-            ].map((m) => (
+            {[{ k: "ADR", v: "$312" },{ k: "RevPAR", v: "$271" },{ k: "Occupancy", v: "87%" }].map((m) => (
               <div key={m.k} className="rounded-2xl bg-muted p-4">
                 <div className="text-muted-foreground">{m.k}</div>
                 <div className="text-xl font-semibold">{m.v}</div>
@@ -395,7 +322,6 @@ function RevenueCard() {
   );
 }
 
-/* ----------------------- Guest Experience ------------------- */
 function GuestExperience() {
   return (
     <section className="px-3 sm:px-6 py-6">
@@ -404,10 +330,9 @@ function GuestExperience() {
           <p className="text-foreground/60 mb-3">Guest experience</p>
           <h2 className="font-display text-5xl sm:text-7xl">Every guest, delighted</h2>
           <p className="mt-6 text-lg max-w-md text-foreground/80">
-            AI concierge across WhatsApp, SMS and email. Handle requests,
-            upsells, and reviews automatically — 24/7.
+            AI concierge across WhatsApp, SMS and email. Handle requests, upsells, and reviews automatically — 24/7.
           </p>
-          <a href="#guest" className="mt-8 inline-flex bg-foreground text-background rounded-full px-7 py-4 font-semibold">
+          <a href="#guest" className="mt-8 inline-flex bg-foreground text-background rounded-full px-7 py-4 font-semibold hover:scale-[1.03] transition">
             Explore guest AI
           </a>
         </div>
@@ -418,21 +343,11 @@ function GuestExperience() {
                 <MessageCircle className="h-3.5 w-3.5" /> OPERIX Concierge
               </div>
               <div className="space-y-2 text-sm">
-                <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">
-                  Hi! Can I get a late checkout tomorrow?
-                </div>
-                <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">
-                  Of course — 2 PM works for Suite 1204. Confirmed ✨
-                </div>
-                <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">
-                  Perfect. Could you book the spa at 11?
-                </div>
-                <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">
-                  Booked. 60-min deep tissue, $180 added to your folio.
-                </div>
-                <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">
-                  You're amazing 🙏
-                </div>
+                <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">Hi! Can I get a late checkout tomorrow?</div>
+                <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">Of course — 2 PM works for Suite 1204. Confirmed ✨</div>
+                <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">Perfect. Could you book the spa at 11?</div>
+                <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">Booked. 60-min deep tissue, $180 added to your folio.</div>
+                <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">You're amazing 🙏</div>
               </div>
             </div>
           </div>
@@ -442,7 +357,6 @@ function GuestExperience() {
   );
 }
 
-/* ----------------------- Ecosystem -------------------------- */
 function Ecosystem() {
   const modules = [
     { icon: Calendar, label: "Reservations" },
@@ -460,18 +374,18 @@ function Ecosystem() {
   ];
   return (
     <section className="bg-background py-24 px-4">
-      <SectionLead eyebrow="Ecosystem" title="One platform. Every module. Zero silos." />
+      <div className="max-w-4xl mx-auto text-center px-4">
+        <p className="text-muted-foreground mb-3">Ecosystem</p>
+        <h2 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05]">
+          One platform. Every module. Zero silos.
+        </h2>
+      </div>
       <div className="mt-16 max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
         {modules.map((m) => (
-          <div
-            key={m.label}
-            className="group bg-white rounded-3xl p-6 hover:bg-foreground hover:text-background transition cursor-pointer"
-          >
+          <div key={m.label} className="group bg-white rounded-3xl p-6 hover:bg-foreground hover:text-background transition hover-lift cursor-pointer">
             <m.icon className="h-6 w-6 mb-6" />
             <div className="text-lg font-semibold">{m.label}</div>
-            <div className="mt-1 text-sm text-muted-foreground group-hover:text-background/60">
-              Built-in module
-            </div>
+            <div className="mt-1 text-sm text-muted-foreground group-hover:text-background/60">Built-in module</div>
           </div>
         ))}
       </div>
@@ -479,20 +393,8 @@ function Ecosystem() {
   );
 }
 
-/* ----------------------- Integrations ----------------------- */
 function Integrations() {
-  const items = [
-    "Stripe",
-    "QuickBooks",
-    "Xero",
-    "WhatsApp",
-    "Booking.com",
-    "Airbnb",
-    "Expedia",
-    "Google Hotels",
-    "Oracle",
-    "Salesforce",
-  ];
+  const items = ["Stripe","QuickBooks","Xero","WhatsApp","Booking.com","Airbnb","Expedia","Google Hotels","Oracle","Salesforce"];
   return (
     <section className="px-3 sm:px-6 py-6">
       <div className="rounded-[36px] bg-foreground text-background p-8 sm:p-16">
@@ -500,62 +402,12 @@ function Integrations() {
           <p className="text-background/60 mb-3">Integrations</p>
           <h2 className="font-display text-5xl sm:text-7xl">Plays nice with your stack</h2>
         </div>
-        <div className="mt-12 flex flex-wrap gap-3 justify-center">
-          {items.map((i) => (
-            <span
-              key={i}
-              className="bg-white/10 hover:bg-op-purple hover:text-foreground transition rounded-full px-5 py-3 font-semibold"
-            >
-              {i}
-            </span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------- Find creators-style orange --------- */
-function FindRightFit() {
-  return (
-    <section className="px-3 sm:px-6 py-6">
-      <div className="rounded-[36px] bg-op-orange min-h-[80vh] p-8 sm:p-16 flex items-end">
-        <h2 className="font-display text-5xl sm:text-8xl text-foreground max-w-4xl">
-          Find, schedule, and grow the right team for every shift
-        </h2>
-      </div>
-    </section>
-  );
-}
-
-/* ----------------------- Testimonial ------------------------ */
-function Testimonial() {
-  return (
-    <section className="bg-background py-24 px-4">
-      <div className="max-w-4xl mx-auto text-center mb-12">
-        <p className="text-muted-foreground mb-3">Testimonials</p>
-        <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight">
-          From teams who used to drown in spreadsheets
-        </h2>
-      </div>
-      <div className="max-w-3xl mx-auto bg-op-peach rounded-[32px] p-8 sm:p-12">
-        <div className="font-display text-2xl">AURELIA RESORTS</div>
-        <p className="mt-8 text-lg leading-relaxed">
-          Before OPERIX, our operations were split across six tools. Now everything
-          — reservations, housekeeping, revenue, payroll — runs in one place. Our
-          team saves 30+ hours a week.
-        </p>
-        <div className="mt-10 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full bg-foreground text-background flex items-center justify-center font-semibold">
-            RK
-          </div>
-          <div>
-            <div className="font-semibold">Regina Kacajeva</div>
-            <div className="text-sm text-muted-foreground">Director of Operations</div>
-          </div>
-          <div className="ml-auto flex gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 fill-foreground" />
+        <div className="mt-12 overflow-hidden marquee-mask">
+          <div className="flex gap-3 animate-marquee-slow w-max">
+            {[...items, ...items, ...items].map((i, idx) => (
+              <span key={idx} className="bg-white/10 hover:bg-op-purple hover:text-foreground transition rounded-full px-5 py-3 font-semibold whitespace-nowrap">
+                {i}
+              </span>
             ))}
           </div>
         </div>
@@ -564,76 +416,119 @@ function Testimonial() {
   );
 }
 
-/* ----------------------- Resources -------------------------- */
-function Resources() {
+/* ---------- Scroll-driven color-shifting big sections ---------- */
+const SHIFT_SECTIONS = [
+  {
+    bg: "bg-op-orange",
+    text: "text-foreground",
+    eyebrow: "Workforce",
+    title: "Find, schedule, and grow the right team for every shift",
+  },
+  {
+    bg: "bg-op-purple",
+    text: "text-foreground",
+    eyebrow: "Revenue",
+    title: "Forecast demand, price every room, win every channel",
+  },
+  {
+    bg: "bg-op-pink",
+    text: "text-foreground",
+    eyebrow: "Guest AI",
+    title: "Answer guests in seconds, in any language, on any channel",
+  },
+  {
+    bg: "bg-foreground",
+    text: "text-background",
+    eyebrow: "Operations",
+    title: "Turn chaos into clarity across every property in your group",
+  },
+];
+
+function ShiftStack() {
   return (
-    <section id="resources" className="bg-background py-24 px-4">
-      <div className="max-w-4xl mx-auto text-center mb-12">
-        <p className="text-muted-foreground mb-3">Resources</p>
-        <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight">
-          Become a smarter hotelier
-        </h2>
-      </div>
-      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-5">
-        <article className="bg-muted rounded-3xl p-6">
-          <div className="rounded-2xl bg-op-purple h-56 flex items-end p-6">
-            <BarChart3 className="h-10 w-10" />
-          </div>
-          <span className="inline-block mt-6 text-xs bg-white px-3 py-1 rounded-full font-semibold">
-            Revenue Lab
-          </span>
-          <h3 className="mt-4 text-2xl font-semibold">Pricing playbook 2026</h3>
-          <p className="mt-2 text-muted-foreground">
-            How leading independent hotels are using AI to push RevPAR by 22% YoY.
-          </p>
-        </article>
-        <article className="bg-muted rounded-3xl p-6">
-          <div className="rounded-2xl bg-foreground h-56 flex items-end p-6">
-            <Users className="h-10 w-10 text-background" />
-          </div>
-          <span className="inline-block mt-6 text-xs bg-white px-3 py-1 rounded-full font-semibold">
-            Survey Says
-          </span>
-          <h3 className="mt-4 text-2xl font-semibold">What guests actually want</h3>
-          <p className="mt-2 text-muted-foreground">
-            We surveyed 4,200 travelers. The results will reshape your concierge
-            strategy.
-          </p>
-        </article>
-      </div>
+    <div>
+      {SHIFT_SECTIONS.map((s, i) => (
+        <ShiftSection key={i} {...s} />
+      ))}
+    </div>
+  );
+}
+
+function ShiftSection({ bg, text, eyebrow, title }: { bg: string; text: string; eyebrow: string; title: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.4, 1, 1, 0.4]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const el = ref.current.querySelector(".shift-title");
+    if (!el) return;
+    const split = (el.textContent || "").split(" ");
+    el.innerHTML = split.map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">${w}&nbsp;</span></span>`).join("");
+    const ctx = gsap.context(() => {
+      gsap.from(".shift-word", {
+        yPercent: 110,
+        duration: 0.9,
+        ease: "expo.out",
+        stagger: 0.04,
+        scrollTrigger: { trigger: ref.current, start: "top 70%" },
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={ref} className="px-3 sm:px-6 py-6">
+      <motion.div style={{ opacity }} className={`rounded-[36px] ${bg} ${text} min-h-[85vh] p-8 sm:p-16 flex flex-col justify-between overflow-hidden`}>
+        <div className="flex items-center justify-between text-sm font-medium opacity-70">
+          <span>{eyebrow}</span>
+          <span>0{SHIFT_SECTIONS.findIndex((x) => x.eyebrow === eyebrow) + 1} / 0{SHIFT_SECTIONS.length}</span>
+        </div>
+        <motion.h2 style={{ y }} className="shift-title font-display text-5xl sm:text-8xl max-w-5xl">
+          {title}
+        </motion.h2>
+      </motion.div>
     </section>
   );
 }
 
-/* ----------------------- FAQ -------------------------------- */
-function FAQ() {
+/* ----------------------- Testimonials (auto-scroll) ------------------------ */
+function Testimonials() {
   const items = [
-    "What is OPERIX and how does it work?",
-    "Is OPERIX a PMS, a channel manager, or both?",
-    "Can I use OPERIX for boutique hotels and resorts?",
-    "Will it integrate with my existing systems?",
-    "How does OPERIX pricing work?",
-    "Is there a free trial?",
+    { brand: "AURELIA RESORTS", quote: "Before OPERIX, our operations were split across six tools. Now everything runs in one place. Our team saves 30+ hours a week.", name: "Regina Kacajeva", role: "Director of Operations", color: "bg-op-peach" },
+    { brand: "NORDIC HOUSE", quote: "Revenue forecasts that actually work. We hit RevPAR targets two quarters in a row.", name: "Mikael Vinter", role: "GM", color: "bg-op-purple" },
+    { brand: "CASA SOLAR", quote: "Housekeeping turns dropped from 38 to 22 minutes. Guests notice.", name: "Laura Castaño", role: "Head of Operations", color: "bg-op-pink" },
+    { brand: "KUMO HOTELS", quote: "The AI concierge handles 70% of guest messages without a human in the loop.", name: "Hiro Tanaka", role: "Founder", color: "bg-op-beige" },
+    { brand: "MAISON ELYSÉE", quote: "One log-in for everything. We retired five tools in a month.", name: "Camille Roux", role: "CEO", color: "bg-op-orange" },
   ];
-  const [open, setOpen] = useState<number | null>(0);
   return (
-    <section className="px-3 sm:px-6 py-6">
-      <div className="bg-muted rounded-[36px] p-8 sm:p-12 max-w-5xl mx-auto">
-        <h2 className="text-4xl sm:text-5xl font-semibold mb-8">Frequently asked questions</h2>
-        <div className="divide-y divide-border">
-          {items.map((q, i) => (
-            <button
-              key={q}
-              onClick={() => setOpen(open === i ? null : i)}
-              className="w-full flex items-center justify-between py-5 text-left"
-            >
-              <span className="text-lg sm:text-xl font-medium pr-6">{q}</span>
-              <span className="h-10 w-10 shrink-0 rounded-xl bg-white flex items-center justify-center">
-                <Plus
-                  className={`h-5 w-5 transition-transform ${open === i ? "rotate-45" : ""}`}
-                />
-              </span>
-            </button>
+    <section className="bg-background py-24">
+      <div className="max-w-4xl mx-auto text-center mb-12 px-4">
+        <p className="text-muted-foreground mb-3">Testimonials</p>
+        <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight">
+          From teams who used to drown in spreadsheets
+        </h2>
+      </div>
+      <div className="overflow-hidden marquee-mask">
+        <div className="flex gap-6 animate-marquee-slow w-max">
+          {[...items, ...items].map((t, i) => (
+            <article key={i} className={`shrink-0 w-[88vw] sm:w-[520px] ${t.color} rounded-[32px] p-8 sm:p-10 hover-lift`}>
+              <div className="font-display text-xl">{t.brand}</div>
+              <p className="mt-6 text-lg leading-relaxed text-foreground/85">{t.quote}</p>
+              <div className="mt-8 flex items-center gap-4">
+                <div className="h-11 w-11 rounded-full bg-foreground text-background flex items-center justify-center font-semibold">
+                  {t.name.split(" ").map((n) => n[0]).join("")}
+                </div>
+                <div>
+                  <div className="font-semibold">{t.name}</div>
+                  <div className="text-sm text-foreground/60">{t.role}</div>
+                </div>
+                <div className="ml-auto flex gap-0.5">
+                  {[...Array(5)].map((_, j) => (<Star key={j} className="h-4 w-4 fill-foreground" />))}
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -641,7 +536,80 @@ function FAQ() {
   );
 }
 
-/* ----------------------- Final CTA -------------------------- */
+function Resources() {
+  return (
+    <section id="resources" className="bg-background py-24 px-4">
+      <div className="max-w-4xl mx-auto text-center mb-12">
+        <p className="text-muted-foreground mb-3">Resources</p>
+        <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight">Become a smarter hotelier</h2>
+      </div>
+      <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-5">
+        <article className="bg-muted rounded-3xl p-6 hover-lift">
+          <div className="rounded-2xl bg-op-purple h-56 flex items-end p-6"><BarChart3 className="h-10 w-10" /></div>
+          <span className="inline-block mt-6 text-xs bg-white px-3 py-1 rounded-full font-semibold">Revenue Lab</span>
+          <h3 className="mt-4 text-2xl font-semibold">Pricing playbook 2026</h3>
+          <p className="mt-2 text-muted-foreground">How leading independent hotels are using AI to push RevPAR by 22% YoY.</p>
+        </article>
+        <article className="bg-muted rounded-3xl p-6 hover-lift">
+          <div className="rounded-2xl bg-foreground h-56 flex items-end p-6"><Users className="h-10 w-10 text-background" /></div>
+          <span className="inline-block mt-6 text-xs bg-white px-3 py-1 rounded-full font-semibold">Survey Says</span>
+          <h3 className="mt-4 text-2xl font-semibold">What guests actually want</h3>
+          <p className="mt-2 text-muted-foreground">We surveyed 4,200 travelers. The results will reshape your concierge strategy.</p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------- FAQ (accordion) -------------------------------- */
+function FAQ() {
+  const items = [
+    { q: "What is OPERIX and how does it work?", a: "OPERIX is an AI-native operating system for hotels. It unifies your PMS, channel manager, housekeeping, revenue, CRM, accounting and guest messaging in one platform — with an AI copilot that automates the busywork." },
+    { q: "Is OPERIX a PMS, a channel manager, or both?", a: "Both, and more. OPERIX replaces your PMS, channel manager, RMS, and guest messaging tools with a single unified system, so you stop paying for — and reconciling — five different vendors." },
+    { q: "Can I use OPERIX for boutique hotels and resorts?", a: "Yes. OPERIX runs single-property boutiques, resorts, hostels, serviced apartments, and global groups with hundreds of locations. The platform scales with you." },
+    { q: "Will it integrate with my existing systems?", a: "OPERIX integrates with Stripe, QuickBooks, Xero, WhatsApp, Booking.com, Airbnb, Expedia, Google Hotels, Oracle, Salesforce and more — plus an open API for everything else." },
+    { q: "How does OPERIX pricing work?", a: "Pricing is per room, per month, with three tiers (Starter, Growth, Enterprise). All plans include the AI copilot, unlimited users, and 24/7 support." },
+    { q: "Is there a free trial?", a: "Yes — 14 days, no credit card required. You can import your data and run your full property end-to-end before deciding." },
+  ];
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section className="px-3 sm:px-6 py-6">
+      <div className="bg-muted rounded-[36px] p-8 sm:p-12 max-w-5xl mx-auto">
+        <h2 className="text-4xl sm:text-5xl font-semibold mb-8">Frequently asked questions</h2>
+        <div className="divide-y divide-border">
+          {items.map((item, i) => {
+            const isOpen = open === i;
+            return (
+              <div key={item.q} className="py-2">
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="w-full flex items-center justify-between py-5 text-left group"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-lg sm:text-xl font-medium pr-6 group-hover:translate-x-1 transition-transform">{item.q}</span>
+                  <span className={`h-10 w-10 shrink-0 rounded-xl flex items-center justify-center transition ${isOpen ? "bg-foreground text-background" : "bg-white"}`}>
+                    <Plus className={`h-5 w-5 transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`} />
+                  </span>
+                </button>
+                <div
+                  className="grid transition-all duration-500 ease-out"
+                  style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+                >
+                  <div className="overflow-hidden">
+                    <p className="pb-6 pr-14 text-base sm:text-lg text-muted-foreground leading-relaxed">
+                      {item.a}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
   return (
     <section className="px-3 sm:px-6 py-6">
@@ -650,60 +618,34 @@ function FinalCTA() {
           The future of hotel<br />operations is here
         </h2>
         <div className="mt-12 flex flex-wrap gap-3 justify-center">
-          <a href="#trial" className="bg-foreground text-background rounded-full px-8 py-4 font-semibold inline-flex items-center gap-2">
+          <a href="#trial" className="bg-foreground text-background rounded-full px-8 py-4 font-semibold inline-flex items-center gap-2 hover:scale-[1.03] transition">
             Start free trial <ArrowRight className="h-4 w-4" />
           </a>
-          <a href="#demo" className="bg-white text-foreground rounded-full px-8 py-4 font-semibold">
+          <a href="#demo" className="bg-white text-foreground rounded-full px-8 py-4 font-semibold hover:scale-[1.03] transition">
             Book a demo
           </a>
+        </div>
+        <div className="mt-16 grid grid-cols-3 max-w-2xl mx-auto gap-6 text-foreground/80">
+          {[
+            { icon: Zap, label: "Set up in days" },
+            { icon: Shield, label: "Enterprise-grade" },
+            { icon: Globe, label: "Multi-property" },
+          ].map((b) => (
+            <div key={b.label} className="flex flex-col items-center gap-2">
+              <b.icon className="h-5 w-5" />
+              <span className="text-sm font-medium">{b.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-/* ----------------------- Footer ----------------------------- */
-function Footer() {
-  return (
-    <footer className="bg-foreground text-background px-6 py-20 mt-6">
-      <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-12">
-        <div>
-          <div className="font-display text-3xl">OPERIX</div>
-          <p className="mt-4 text-background/60 text-sm max-w-xs">
-            The AI operating system for modern hospitality.
-          </p>
-        </div>
-        {[
-          { h: "Product", l: ["Reservations", "Front Desk", "Housekeeping", "Revenue", "AI Copilot"] },
-          { h: "Company", l: ["About", "Customers", "Careers", "Press", "Contact"] },
-          { h: "Support", l: ["Help center", "Product tour", "API", "Status", "Security"] },
-        ].map((c) => (
-          <div key={c.h}>
-            <div className="font-semibold mb-4">{c.h}</div>
-            <ul className="space-y-3 text-background/60">
-              {c.l.map((x) => (
-                <li key={x}><a href="#" className="hover:text-background">{x}</a></li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/10 flex justify-between text-sm text-background/50">
-        <span>© 2026 OPERIX. All rights reserved.</span>
-        <span>ISO 27001 · GDPR · SOC 2</span>
-      </div>
-      <div className="mt-12 font-display text-[20vw] leading-none text-white/5 text-center select-none">
-        OPERIX
-      </div>
-    </footer>
-  );
-}
-
-/* ---------------------------- Page -------------------------- */
 function Landing() {
   return (
     <main className="bg-background text-foreground">
-      <Nav />
+      <SiteNav />
       <Hero />
       <TrustedBy />
       <div className="text-center pt-8 pb-4">
@@ -719,12 +661,12 @@ function Landing() {
       <GuestExperience />
       <Ecosystem />
       <Integrations />
-      <FindRightFit />
-      <Testimonial />
+      <ShiftStack />
+      <Testimonials />
       <Resources />
       <FAQ />
       <FinalCTA />
-      <Footer />
+      <SiteFooter />
     </main>
   );
 }
