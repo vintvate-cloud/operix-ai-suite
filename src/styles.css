@@ -183,9 +183,9 @@
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-.animate-marquee {
-  animation: op-marquee 35s linear infinite;
-}
+.animate-marquee { animation: op-marquee 35s linear infinite; }
+.animate-marquee-slow { animation: op-marquee 60s linear infinite; }
+.animate-marquee-reverse { animation: op-marquee 45s linear infinite reverse; }
 
 @keyframes op-rise {
   from { opacity: 0; transform: translateY(24px); }
@@ -204,4 +204,12 @@
   50%      { opacity: 0.3; }
 }
 .animate-pulse-dot { animation: op-pulse-dot 1.6s ease-in-out infinite; }
+
+.hover-lift { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
+.hover-lift:hover { transform: translateY(-4px); }
+
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
 
