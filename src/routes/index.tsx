@@ -100,19 +100,30 @@ function Hero() {
           14-day free trial · No credit card required
         </p>
 
-        <div className="mt-20 grid grid-cols-4 sm:grid-cols-6 gap-3 max-w-3xl mx-auto">
-          <div className="hero-tile aspect-square rounded-full bg-op-pink animate-float overflow-hidden flex items-center justify-center text-3xl">🛎️</div>
-          <div className="hero-tile col-span-1 rounded-3xl bg-op-purple aspect-square flex items-center justify-center animate-float [animation-delay:0.5s]">
-            <Search className="text-foreground h-7 w-7" />
-          </div>
-          <div className="hero-tile col-span-2 rounded-3xl bg-op-pink/70 aspect-[2/1] animate-float [animation-delay:1s]" />
-          <div className="hero-tile col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.2s]" />
-          <div className="hero-tile col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.7s]" />
-          <div className="hero-tile aspect-square rounded-full bg-op-beige animate-float [animation-delay:1.2s] overflow-hidden flex items-center justify-center text-3xl">🛏️</div>
-          <div className="hero-tile rounded-3xl bg-op-orange aspect-square flex items-center justify-center animate-float [animation-delay:0.4s]">
-            <DollarSign className="text-white h-7 w-7" />
-          </div>
+      </div>
+      <div className="mt-20 w-full grid grid-cols-6 sm:grid-cols-12 gap-3 px-2 sm:px-6">
+        <div className="hero-tile col-span-2 aspect-square rounded-full bg-op-pink animate-float flex items-center justify-center text-3xl">🛎️</div>
+        <div className="hero-tile col-span-1 sm:col-span-2 rounded-3xl bg-op-purple aspect-square flex items-center justify-center animate-float [animation-delay:0.5s]">
+          <Search className="text-foreground h-7 w-7" />
         </div>
+        <div className="hero-tile col-span-3 sm:col-span-4 rounded-3xl bg-op-pink/70 aspect-[2/1] animate-float [animation-delay:1s] flex items-center justify-center text-background/70 font-display text-2xl">FRONT DESK</div>
+        <div className="hero-tile col-span-6 sm:col-span-4 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.2s] flex items-center px-6 text-foreground/70 font-display text-2xl">REVENUE</div>
+
+        <div className="hero-tile col-span-6 sm:col-span-5 rounded-3xl bg-op-peach aspect-[2.2/1] animate-float [animation-delay:0.7s] flex items-center px-6 text-foreground/70 font-display text-2xl">HOUSEKEEPING</div>
+        <div className="hero-tile col-span-2 aspect-square rounded-full bg-op-beige animate-float [animation-delay:1.2s] flex items-center justify-center text-3xl">🛏️</div>
+        <div className="hero-tile col-span-2 rounded-3xl bg-op-orange aspect-square flex items-center justify-center animate-float [animation-delay:0.4s]">
+          <DollarSign className="text-white h-7 w-7" />
+        </div>
+        <div className="hero-tile col-span-3 rounded-3xl bg-op-purple/70 aspect-[1.5/1] animate-float [animation-delay:0.9s] flex items-center justify-center">
+          <Bot className="text-foreground h-8 w-8" />
+        </div>
+
+        <div className="hero-tile col-span-4 rounded-3xl bg-background/10 aspect-[2/1] animate-float [animation-delay:0.3s] backdrop-blur flex items-center px-6 text-background/80 font-display text-xl">AI COPILOT</div>
+        <div className="hero-tile col-span-2 aspect-square rounded-full bg-op-pink animate-float [animation-delay:1.4s] flex items-center justify-center text-3xl">🍽️</div>
+        <div className="hero-tile col-span-3 rounded-3xl bg-op-beige aspect-[1.5/1] animate-float [animation-delay:0.6s] flex items-center justify-center">
+          <Calendar className="text-foreground h-8 w-8" />
+        </div>
+        <div className="hero-tile col-span-3 rounded-3xl bg-op-orange/80 aspect-[1.5/1] animate-float [animation-delay:0.1s] flex items-center justify-center text-3xl">💼</div>
       </div>
     </section>
   );
