@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardReservationsRouteImport } from './routes/dashboard.reservations'
+import { Route as DashboardHousekeepingRouteImport } from './routes/dashboard.housekeeping'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -52,6 +53,11 @@ const DashboardReservationsRoute = DashboardReservationsRouteImport.update({
   path: '/reservations',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardHousekeepingRoute = DashboardHousekeepingRouteImport.update({
+  id: '/housekeeping',
+  path: '/housekeeping',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard': typeof DashboardIndexRoute
 }
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/housekeeping'
     | '/dashboard/reservations'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/housekeeping'
     | '/dashboard/reservations'
     | '/dashboard'
   id:
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/housekeeping'
     | '/dashboard/reservations'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
@@ -168,15 +180,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardReservationsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/housekeeping': {
+      id: '/dashboard/housekeeping'
+      path: '/housekeeping'
+      fullPath: '/dashboard/housekeeping'
+      preLoaderRoute: typeof DashboardHousekeepingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardHousekeepingRoute: typeof DashboardHousekeepingRoute
   DashboardReservationsRoute: typeof DashboardReservationsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardHousekeepingRoute: DashboardHousekeepingRoute,
   DashboardReservationsRoute: DashboardReservationsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
