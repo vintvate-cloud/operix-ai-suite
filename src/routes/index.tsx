@@ -457,52 +457,58 @@ const SHIFT_SECTIONS = [
 
 function ShiftStack() {
   return (
-    <div>
+    <div className="relative">
       {SHIFT_SECTIONS.map((s, i) => (
-        <ShiftSection key={i} {...s} />
+        <ShiftSection key={i} index={i} total={SHIFT_SECTIONS.length} {...s} />
       ))}
     </div>
   );
 }
 
-function ShiftSection({ bg, text, eyebrow, title }: { bg: string; text: string; eyebrow: string; title: string }) {
+function ShiftSection({ bg, text, eyebrow, title, index, total }: { bg: string; text: string; eyebrow: string; title: string; index: number; total: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.4, 1, 1, 0.4]);
 
   useEffect(() => {
     if (!ref.current) return;
     const el = ref.current.querySelector(".shift-title");
     if (!el) return;
     const split = (el.textContent || "").split(" ");
-    el.innerHTML = split.map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">${w}&nbsp;</span></span>`).join("");
+    el.innerHTML = split
+      .map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">${w}&nbsp;</span></span>`)
+      .join("");
     const ctx = gsap.context(() => {
       gsap.from(".shift-word", {
         yPercent: 110,
         duration: 0.9,
         ease: "expo.out",
         stagger: 0.04,
-        scrollTrigger: { trigger: ref.current, start: "top 70%" },
+        scrollTrigger: { trigger: ref.current, start: "top 75%" },
       });
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} className="px-3 sm:px-6 py-6">
-      <motion.div style={{ opacity }} className={`rounded-[36px] ${bg} ${text} min-h-[85vh] p-8 sm:p-16 flex flex-col justify-between overflow-hidden`}>
+    <section
+      ref={ref}
+      className="sticky px-3 sm:px-6 pb-6"
+      style={{ top: `${index * 24}px` }}
+    >
+      <div
+        className={`rounded-[36px] ${bg} ${text} min-h-[88vh] p-8 sm:p-16 flex flex-col justify-between overflow-hidden shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.25)]`}
+      >
         <div className="flex items-center justify-between text-sm font-medium opacity-70">
           <span>{eyebrow}</span>
-          <span>0{SHIFT_SECTIONS.findIndex((x) => x.eyebrow === eyebrow) + 1} / 0{SHIFT_SECTIONS.length}</span>
+          <span>
+            0{index + 1} / 0{total}
+          </span>
         </div>
-        <motion.h2 style={{ y }} className="shift-title font-display text-5xl sm:text-8xl max-w-5xl">
-          {title}
-        </motion.h2>
-      </motion.div>
+        <h2 className="shift-title font-display text-5xl sm:text-8xl max-w-5xl">{title}</h2>
+      </div>
     </section>
   );
 }
+
 
 /* ----------------------- Testimonials (auto-scroll) ------------------------ */
 function Testimonials() {
