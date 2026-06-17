@@ -898,9 +898,12 @@ function Landing() {
       <RevenueCard />
       <GuestExperience />
       <Ecosystem />
+      <BentoFeatures />
       <Integrations />
       <ShiftStack />
+      <Onboarding />
       <Testimonials />
+
       <Resources />
       <FAQ />
       <FinalCTA />
