@@ -14,6 +14,14 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardRevenueRouteImport } from './routes/dashboard.revenue'
+import { Route as DashboardReservationsRouteImport } from './routes/dashboard.reservations'
+import { Route as DashboardPropertiesRouteImport } from './routes/dashboard.properties'
+import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
+import { Route as DashboardHousekeepingRouteImport } from './routes/dashboard.housekeeping'
+import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -40,40 +48,142 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRevenueRoute = DashboardRevenueRouteImport.update({
+  id: '/revenue',
+  path: '/revenue',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReservationsRoute = DashboardReservationsRouteImport.update({
+  id: '/reservations',
+  path: '/reservations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPropertiesRoute = DashboardPropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInboxRoute = DashboardInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHousekeepingRoute = DashboardHousekeepingRouteImport.update({
+  id: '/housekeeping',
+  path: '/housekeeping',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardGuestsRoute = DashboardGuestsRouteImport.update({
+  id: '/guests',
+  path: '/guests',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/guests': typeof DashboardGuestsRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
+  '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/properties': typeof DashboardPropertiesRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
+  '/dashboard/revenue': typeof DashboardRevenueRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/guests': typeof DashboardGuestsRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
+  '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/properties': typeof DashboardPropertiesRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
+  '/dashboard/revenue': typeof DashboardRevenueRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/guests': typeof DashboardGuestsRoute
+  '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
+  '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/properties': typeof DashboardPropertiesRoute
+  '/dashboard/reservations': typeof DashboardReservationsRoute
+  '/dashboard/revenue': typeof DashboardRevenueRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/pricing' | '/sign-in' | '/sign-up'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/pricing'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard/guests'
+    | '/dashboard/housekeeping'
+    | '/dashboard/inbox'
+    | '/dashboard/properties'
+    | '/dashboard/reservations'
+    | '/dashboard/revenue'
+    | '/dashboard/settings'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/pricing' | '/sign-in' | '/sign-up'
-  id: '__root__' | '/' | '/dashboard' | '/pricing' | '/sign-in' | '/sign-up'
+  to:
+    | '/'
+    | '/pricing'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard/guests'
+    | '/dashboard/housekeeping'
+    | '/dashboard/inbox'
+    | '/dashboard/properties'
+    | '/dashboard/reservations'
+    | '/dashboard/revenue'
+    | '/dashboard/settings'
+    | '/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/pricing'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard/guests'
+    | '/dashboard/housekeeping'
+    | '/dashboard/inbox'
+    | '/dashboard/properties'
+    | '/dashboard/reservations'
+    | '/dashboard/revenue'
+    | '/dashboard/settings'
+    | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
   PricingRoute: typeof PricingRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
@@ -116,12 +226,94 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/revenue': {
+      id: '/dashboard/revenue'
+      path: '/revenue'
+      fullPath: '/dashboard/revenue'
+      preLoaderRoute: typeof DashboardRevenueRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/reservations': {
+      id: '/dashboard/reservations'
+      path: '/reservations'
+      fullPath: '/dashboard/reservations'
+      preLoaderRoute: typeof DashboardReservationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/properties': {
+      id: '/dashboard/properties'
+      path: '/properties'
+      fullPath: '/dashboard/properties'
+      preLoaderRoute: typeof DashboardPropertiesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/inbox': {
+      id: '/dashboard/inbox'
+      path: '/inbox'
+      fullPath: '/dashboard/inbox'
+      preLoaderRoute: typeof DashboardInboxRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/housekeeping': {
+      id: '/dashboard/housekeeping'
+      path: '/housekeeping'
+      fullPath: '/dashboard/housekeeping'
+      preLoaderRoute: typeof DashboardHousekeepingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/guests': {
+      id: '/dashboard/guests'
+      path: '/guests'
+      fullPath: '/dashboard/guests'
+      preLoaderRoute: typeof DashboardGuestsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardGuestsRoute: typeof DashboardGuestsRoute
+  DashboardHousekeepingRoute: typeof DashboardHousekeepingRoute
+  DashboardInboxRoute: typeof DashboardInboxRoute
+  DashboardPropertiesRoute: typeof DashboardPropertiesRoute
+  DashboardReservationsRoute: typeof DashboardReservationsRoute
+  DashboardRevenueRoute: typeof DashboardRevenueRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardGuestsRoute: DashboardGuestsRoute,
+  DashboardHousekeepingRoute: DashboardHousekeepingRoute,
+  DashboardInboxRoute: DashboardInboxRoute,
+  DashboardPropertiesRoute: DashboardPropertiesRoute,
+  DashboardReservationsRoute: DashboardReservationsRoute,
+  DashboardRevenueRoute: DashboardRevenueRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
   PricingRoute: PricingRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,

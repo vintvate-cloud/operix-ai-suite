@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+// framer-motion no longer needed here; GSAP handles animations
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -100,19 +100,30 @@ function Hero() {
           14-day free trial · No credit card required
         </p>
 
-        <div className="mt-20 grid grid-cols-4 sm:grid-cols-6 gap-3 max-w-3xl mx-auto">
-          <div className="hero-tile aspect-square rounded-full bg-op-pink animate-float overflow-hidden flex items-center justify-center text-3xl">🛎️</div>
-          <div className="hero-tile col-span-1 rounded-3xl bg-op-purple aspect-square flex items-center justify-center animate-float [animation-delay:0.5s]">
-            <Search className="text-foreground h-7 w-7" />
-          </div>
-          <div className="hero-tile col-span-2 rounded-3xl bg-op-pink/70 aspect-[2/1] animate-float [animation-delay:1s]" />
-          <div className="hero-tile col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.2s]" />
-          <div className="hero-tile col-span-2 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.7s]" />
-          <div className="hero-tile aspect-square rounded-full bg-op-beige animate-float [animation-delay:1.2s] overflow-hidden flex items-center justify-center text-3xl">🛏️</div>
-          <div className="hero-tile rounded-3xl bg-op-orange aspect-square flex items-center justify-center animate-float [animation-delay:0.4s]">
-            <DollarSign className="text-white h-7 w-7" />
-          </div>
+      </div>
+      <div className="mt-20 w-full grid grid-cols-6 sm:grid-cols-12 gap-3 px-2 sm:px-6">
+        <div className="hero-tile col-span-2 aspect-square rounded-full bg-op-pink animate-float flex items-center justify-center text-3xl">🛎️</div>
+        <div className="hero-tile col-span-1 sm:col-span-2 rounded-3xl bg-op-purple aspect-square flex items-center justify-center animate-float [animation-delay:0.5s]">
+          <Search className="text-foreground h-7 w-7" />
         </div>
+        <div className="hero-tile col-span-3 sm:col-span-4 rounded-3xl bg-op-pink/70 aspect-[2/1] animate-float [animation-delay:1s] flex items-center justify-center text-background/70 font-display text-2xl">FRONT DESK</div>
+        <div className="hero-tile col-span-6 sm:col-span-4 rounded-3xl bg-op-peach aspect-[2/1] animate-float [animation-delay:0.2s] flex items-center px-6 text-foreground/70 font-display text-2xl">REVENUE</div>
+
+        <div className="hero-tile col-span-6 sm:col-span-5 rounded-3xl bg-op-peach aspect-[2.2/1] animate-float [animation-delay:0.7s] flex items-center px-6 text-foreground/70 font-display text-2xl">HOUSEKEEPING</div>
+        <div className="hero-tile col-span-2 aspect-square rounded-full bg-op-beige animate-float [animation-delay:1.2s] flex items-center justify-center text-3xl">🛏️</div>
+        <div className="hero-tile col-span-2 rounded-3xl bg-op-orange aspect-square flex items-center justify-center animate-float [animation-delay:0.4s]">
+          <DollarSign className="text-white h-7 w-7" />
+        </div>
+        <div className="hero-tile col-span-3 rounded-3xl bg-op-purple/70 aspect-[1.5/1] animate-float [animation-delay:0.9s] flex items-center justify-center">
+          <Bot className="text-foreground h-8 w-8" />
+        </div>
+
+        <div className="hero-tile col-span-4 rounded-3xl bg-background/10 aspect-[2/1] animate-float [animation-delay:0.3s] backdrop-blur flex items-center px-6 text-background/80 font-display text-xl">AI COPILOT</div>
+        <div className="hero-tile col-span-2 aspect-square rounded-full bg-op-pink animate-float [animation-delay:1.4s] flex items-center justify-center text-3xl">🍽️</div>
+        <div className="hero-tile col-span-3 rounded-3xl bg-op-beige aspect-[1.5/1] animate-float [animation-delay:0.6s] flex items-center justify-center">
+          <Calendar className="text-foreground h-8 w-8" />
+        </div>
+        <div className="hero-tile col-span-3 rounded-3xl bg-op-orange/80 aspect-[1.5/1] animate-float [animation-delay:0.1s] flex items-center justify-center text-3xl">💼</div>
       </div>
     </section>
   );
@@ -437,6 +448,18 @@ const SHIFT_SECTIONS = [
     title: "Answer guests in seconds, in any language, on any channel",
   },
   {
+    bg: "bg-op-peach",
+    text: "text-foreground",
+    eyebrow: "Housekeeping",
+    title: "Turn every room around faster with live AI assignments",
+  },
+  {
+    bg: "bg-op-beige",
+    text: "text-foreground",
+    eyebrow: "Finance",
+    title: "Close the books in hours, not weeks, with built-in accounting",
+  },
+  {
     bg: "bg-foreground",
     text: "text-background",
     eyebrow: "Operations",
@@ -444,54 +467,61 @@ const SHIFT_SECTIONS = [
   },
 ];
 
+
 function ShiftStack() {
   return (
-    <div>
+    <div className="relative">
       {SHIFT_SECTIONS.map((s, i) => (
-        <ShiftSection key={i} {...s} />
+        <ShiftSection key={i} index={i} total={SHIFT_SECTIONS.length} {...s} />
       ))}
     </div>
   );
 }
 
-function ShiftSection({ bg, text, eyebrow, title }: { bg: string; text: string; eyebrow: string; title: string }) {
+function ShiftSection({ bg, text, eyebrow, title, index, total }: { bg: string; text: string; eyebrow: string; title: string; index: number; total: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [60, -60]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.4, 1, 1, 0.4]);
 
   useEffect(() => {
     if (!ref.current) return;
     const el = ref.current.querySelector(".shift-title");
     if (!el) return;
     const split = (el.textContent || "").split(" ");
-    el.innerHTML = split.map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">${w}&nbsp;</span></span>`).join("");
+    el.innerHTML = split
+      .map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">${w}&nbsp;</span></span>`)
+      .join("");
     const ctx = gsap.context(() => {
       gsap.from(".shift-word", {
         yPercent: 110,
         duration: 0.9,
         ease: "expo.out",
         stagger: 0.04,
-        scrollTrigger: { trigger: ref.current, start: "top 70%" },
+        scrollTrigger: { trigger: ref.current, start: "top 75%" },
       });
     }, ref);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} className="px-3 sm:px-6 py-6">
-      <motion.div style={{ opacity }} className={`rounded-[36px] ${bg} ${text} min-h-[85vh] p-8 sm:p-16 flex flex-col justify-between overflow-hidden`}>
+    <section
+      ref={ref}
+      className="sticky px-3 sm:px-6 pb-6"
+      style={{ top: `${index * 24}px` }}
+    >
+      <div
+        className={`rounded-[36px] ${bg} ${text} min-h-[88vh] p-8 sm:p-16 flex flex-col justify-between overflow-hidden shadow-[0_-20px_60px_-20px_rgba(0,0,0,0.25)]`}
+      >
         <div className="flex items-center justify-between text-sm font-medium opacity-70">
           <span>{eyebrow}</span>
-          <span>0{SHIFT_SECTIONS.findIndex((x) => x.eyebrow === eyebrow) + 1} / 0{SHIFT_SECTIONS.length}</span>
+          <span>
+            0{index + 1} / 0{total}
+          </span>
         </div>
-        <motion.h2 style={{ y }} className="shift-title font-display text-5xl sm:text-8xl max-w-5xl">
-          {title}
-        </motion.h2>
-      </motion.div>
+        <h2 className="shift-title font-display text-5xl sm:text-8xl max-w-5xl">{title}</h2>
+      </div>
     </section>
   );
 }
+
 
 /* ----------------------- Testimonials (auto-scroll) ------------------------ */
 function Testimonials() {
@@ -642,6 +672,214 @@ function FinalCTA() {
   );
 }
 
+/* ----------------------- Bento grid ----------------------- */
+function BentoFeatures() {
+  return (
+    <section className="px-3 sm:px-6 py-6">
+      <div className="max-w-6xl mx-auto text-center mb-10 px-4">
+        <p className="text-muted-foreground mb-3">Everything in one OS</p>
+        <h2 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05]">
+          A bento of capabilities, <br className="hidden sm:block" />wired into one brain
+        </h2>
+      </div>
+      <div className="max-w-6xl mx-auto grid grid-cols-6 auto-rows-[140px] gap-3">
+        <div className="col-span-6 sm:col-span-4 row-span-2 bg-foreground text-background rounded-3xl p-8 flex flex-col justify-between hover-lift">
+          <Bot className="h-7 w-7" />
+          <div>
+            <div className="font-display text-4xl">AI Copilot</div>
+            <p className="mt-2 text-background/70 max-w-md">Ask anything — pricing, occupancy, schedules, reviews — and it acts on it.</p>
+          </div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-purple rounded-3xl p-6 hover-lift">
+          <Calendar className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Reservations</div>
+          <div className="text-xs opacity-70">PMS + OTA sync</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-pink rounded-3xl p-6 hover-lift">
+          <Bed className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Housekeeping</div>
+          <div className="text-xs opacity-70">Smart turn boards</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 row-span-2 bg-op-peach rounded-3xl p-6 flex flex-col justify-between hover-lift">
+          <BarChart3 className="h-6 w-6" />
+          <div>
+            <div className="font-semibold text-lg">Revenue & RMS</div>
+            <p className="text-xs opacity-70">Dynamic pricing across every channel, every night.</p>
+          </div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-beige rounded-3xl p-6 hover-lift">
+          <MessageCircle className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Guest Inbox</div>
+          <div className="text-xs opacity-70">WhatsApp · SMS · Email</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-orange text-foreground rounded-3xl p-6 hover-lift">
+          <DollarSign className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Accounting</div>
+          <div className="text-xs opacity-80">Auto-reconciled</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-foreground text-background rounded-3xl p-6 hover-lift">
+          <Users className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Staff & HR</div>
+          <div className="text-xs opacity-70">Rosters that flex</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-purple rounded-3xl p-6 hover-lift">
+          <ShoppingCart className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Inventory & POS</div>
+          <div className="text-xs opacity-70">F&B included</div>
+        </div>
+        <div className="col-span-6 sm:col-span-2 bg-op-pink rounded-3xl p-6 hover-lift">
+          <Wrench className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Maintenance</div>
+          <div className="text-xs opacity-70">Tickets that close themselves</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------- Onboarding ----------------------- */
+const STEPS = [
+  { n: 1, title: "Create your workspace", body: "Add your brand, set currency and time zones. 60 seconds, no card.", color: "bg-op-purple" },
+  { n: 2, title: "Connect your channels", body: "Booking.com, Airbnb, Expedia, Google Hotels — we sync inventory live.", color: "bg-op-pink" },
+  { n: 3, title: "Import your rooms", body: "Drop a CSV or pull from your old PMS. We map fields automatically.", color: "bg-op-peach" },
+  { n: 4, title: "Meet your AI copilot", body: "Train it on your SOPs in one click. It listens, drafts, and acts.", color: "bg-op-beige" },
+  { n: 5, title: "Go live with your team", body: "Invite staff, assign roles, and run your property from day one.", color: "bg-op-orange" },
+];
+
+function Onboarding() {
+  const [step, setStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    setProgress(0);
+    const start = performance.now();
+    const dur = 4000;
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / dur);
+      setProgress(p);
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else setStep((s) => (s + 1) % STEPS.length);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [step]);
+
+  return (
+    <section className="px-3 sm:px-6 py-6">
+      <div className="rounded-[36px] bg-foreground text-background p-8 sm:p-16">
+        <div className="max-w-3xl">
+          <p className="text-background/60 mb-3">Onboarding</p>
+          <h2 className="font-display text-5xl sm:text-7xl">
+            Live in <span className="text-op-purple">five steps</span>
+          </h2>
+          <p className="mt-6 text-lg text-background/70 max-w-xl">
+            From signup to a fully running hotel, OPERIX guides you with live previews, smart defaults, and a copilot that never sleeps.
+          </p>
+        </div>
+
+        <div className="mt-12 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+          <div className="space-y-3">
+            {STEPS.map((s, i) => {
+              const active = i === step;
+              const done = i < step;
+              return (
+                <button
+                  key={s.n}
+                  onClick={() => setStep(i)}
+                  className={`w-full text-left rounded-3xl p-5 flex items-start gap-4 transition-all duration-500 ${
+                    active ? `${s.color} text-foreground scale-[1.01]` : done ? "bg-white/10" : "bg-white/5 hover:bg-white/10"
+                  }`}
+                >
+                  <span className={`h-10 w-10 shrink-0 rounded-full flex items-center justify-center font-semibold ${active ? "bg-foreground text-background" : done ? "bg-op-success text-foreground" : "bg-white/10"}`}>
+                    {done ? <CheckCircle2 className="h-5 w-5" /> : s.n}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold">{s.title}</div>
+                    <p className={`text-sm mt-1 ${active ? "text-foreground/80" : "text-background/60"}`}>{s.body}</p>
+                    {active && (
+                      <div className="mt-3 h-1 rounded-full bg-foreground/10 overflow-hidden">
+                        <div className="h-full bg-foreground" style={{ width: `${progress * 100}%` }} />
+                      </div>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className={`rounded-3xl p-6 sm:p-8 transition-colors duration-500 ${STEPS[step].color} text-foreground min-h-[420px] flex flex-col`}>
+            <div className="text-xs font-medium opacity-70">Step 0{STEPS[step].n} preview</div>
+            <div className="font-display text-3xl mt-2">{STEPS[step].title}</div>
+
+            <div className="mt-6 flex-1 bg-white rounded-2xl p-5 space-y-3">
+              {step === 0 && (
+                <>
+                  <PreviewField label="Workspace name" value="Aurelia Resorts" />
+                  <PreviewField label="Currency" value="EUR · €" />
+                  <PreviewField label="Time zone" value="Europe/Lisbon" />
+                </>
+              )}
+              {step === 1 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {["Booking.com","Airbnb","Expedia","Google Hotels"].map((c, i) => (
+                    <div key={c} className="rounded-xl bg-muted px-3 py-3 flex items-center justify-between">
+                      <span className="text-sm font-medium">{c}</span>
+                      <span className={`h-2 w-2 rounded-full ${i < 3 ? "bg-op-success animate-pulse-dot" : "bg-muted-foreground/30"}`} />
+                    </div>
+                  ))}
+                </div>
+              )}
+              {step === 2 && (
+                <>
+                  <div className="text-xs text-muted-foreground">Importing rooms.csv</div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden"><div className="h-full bg-foreground" style={{ width: `${30 + progress * 70}%` }} /></div>
+                  <ul className="text-sm space-y-1 mt-3">
+                    {["Mapping room types","Inferring rates","Validating availability"].map((l) => (
+                      <li key={l} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-600" />{l}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {step === 3 && (
+                <>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground"><Bot className="h-3.5 w-3.5" /> Copilot · training on your SOPs</div>
+                  <div className="rounded-2xl bg-muted px-4 py-3 text-sm">Generating welcome message in 6 languages…</div>
+                  <div className="flex gap-1">
+                    {[0,1,2].map((d) => (
+                      <span key={d} className="h-2 w-2 rounded-full bg-foreground animate-pulse-dot" style={{ animationDelay: `${d * 0.15}s` }} />
+                    ))}
+                  </div>
+                </>
+              )}
+              {step === 4 && (
+                <>
+                  <div className="text-xs text-muted-foreground">Invite your team</div>
+                  {["regina@aurelia.co · Owner","ops@aurelia.co · Manager","desk@aurelia.co · Agent"].map((m) => (
+                    <div key={m} className="flex items-center justify-between bg-muted rounded-xl px-3 py-2 text-sm">
+                      <span>{m}</span>
+                      <span className="text-xs text-emerald-700 font-semibold">Sent</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PreviewField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-muted px-3 py-2.5">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-sm font-medium">{value}</div>
+    </div>
+  );
+}
+
 function Landing() {
   return (
     <main className="bg-background text-foreground">
@@ -660,9 +898,12 @@ function Landing() {
       <RevenueCard />
       <GuestExperience />
       <Ecosystem />
+      <BentoFeatures />
       <Integrations />
       <ShiftStack />
+      <Onboarding />
       <Testimonials />
+
       <Resources />
       <FAQ />
       <FinalCTA />
