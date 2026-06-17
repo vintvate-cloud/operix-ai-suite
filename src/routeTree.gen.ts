@@ -17,6 +17,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardRevenueRouteImport } from './routes/dashboard.revenue'
 import { Route as DashboardReservationsRouteImport } from './routes/dashboard.reservations'
+import { Route as DashboardPropertiesRouteImport } from './routes/dashboard.properties'
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardHousekeepingRouteImport } from './routes/dashboard.housekeeping'
 import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
@@ -61,6 +62,11 @@ const DashboardReservationsRoute = DashboardReservationsRouteImport.update({
   path: '/reservations',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPropertiesRoute = DashboardPropertiesRouteImport.update({
+  id: '/properties',
+  path: '/properties',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardInboxRoute = DashboardInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/properties': typeof DashboardPropertiesRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/revenue': typeof DashboardRevenueRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/properties': typeof DashboardPropertiesRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/revenue': typeof DashboardRevenueRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/properties': typeof DashboardPropertiesRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/revenue': typeof DashboardRevenueRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/dashboard/guests'
     | '/dashboard/housekeeping'
     | '/dashboard/inbox'
+    | '/dashboard/properties'
     | '/dashboard/reservations'
     | '/dashboard/revenue'
     | '/dashboard/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/dashboard/guests'
     | '/dashboard/housekeeping'
     | '/dashboard/inbox'
+    | '/dashboard/properties'
     | '/dashboard/reservations'
     | '/dashboard/revenue'
     | '/dashboard'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/dashboard/guests'
     | '/dashboard/housekeeping'
     | '/dashboard/inbox'
+    | '/dashboard/properties'
     | '/dashboard/reservations'
     | '/dashboard/revenue'
     | '/dashboard/'
@@ -223,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardReservationsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/properties': {
+      id: '/dashboard/properties'
+      path: '/properties'
+      fullPath: '/dashboard/properties'
+      preLoaderRoute: typeof DashboardPropertiesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/inbox': {
       id: '/dashboard/inbox'
       path: '/inbox'
@@ -251,6 +270,7 @@ interface DashboardRouteChildren {
   DashboardGuestsRoute: typeof DashboardGuestsRoute
   DashboardHousekeepingRoute: typeof DashboardHousekeepingRoute
   DashboardInboxRoute: typeof DashboardInboxRoute
+  DashboardPropertiesRoute: typeof DashboardPropertiesRoute
   DashboardReservationsRoute: typeof DashboardReservationsRoute
   DashboardRevenueRoute: typeof DashboardRevenueRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -260,6 +280,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardGuestsRoute: DashboardGuestsRoute,
   DashboardHousekeepingRoute: DashboardHousekeepingRoute,
   DashboardInboxRoute: DashboardInboxRoute,
+  DashboardPropertiesRoute: DashboardPropertiesRoute,
   DashboardReservationsRoute: DashboardReservationsRoute,
   DashboardRevenueRoute: DashboardRevenueRoute,
   DashboardIndexRoute: DashboardIndexRoute,
