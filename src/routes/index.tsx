@@ -672,6 +672,214 @@ function FinalCTA() {
   );
 }
 
+/* ----------------------- Bento grid ----------------------- */
+function BentoFeatures() {
+  return (
+    <section className="px-3 sm:px-6 py-6">
+      <div className="max-w-6xl mx-auto text-center mb-10 px-4">
+        <p className="text-muted-foreground mb-3">Everything in one OS</p>
+        <h2 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05]">
+          A bento of capabilities, <br className="hidden sm:block" />wired into one brain
+        </h2>
+      </div>
+      <div className="max-w-6xl mx-auto grid grid-cols-6 auto-rows-[140px] gap-3">
+        <div className="col-span-6 sm:col-span-4 row-span-2 bg-foreground text-background rounded-3xl p-8 flex flex-col justify-between hover-lift">
+          <Bot className="h-7 w-7" />
+          <div>
+            <div className="font-display text-4xl">AI Copilot</div>
+            <p className="mt-2 text-background/70 max-w-md">Ask anything — pricing, occupancy, schedules, reviews — and it acts on it.</p>
+          </div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-purple rounded-3xl p-6 hover-lift">
+          <Calendar className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Reservations</div>
+          <div className="text-xs opacity-70">PMS + OTA sync</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-pink rounded-3xl p-6 hover-lift">
+          <Bed className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Housekeeping</div>
+          <div className="text-xs opacity-70">Smart turn boards</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 row-span-2 bg-op-peach rounded-3xl p-6 flex flex-col justify-between hover-lift">
+          <BarChart3 className="h-6 w-6" />
+          <div>
+            <div className="font-semibold text-lg">Revenue & RMS</div>
+            <p className="text-xs opacity-70">Dynamic pricing across every channel, every night.</p>
+          </div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-beige rounded-3xl p-6 hover-lift">
+          <MessageCircle className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Guest Inbox</div>
+          <div className="text-xs opacity-70">WhatsApp · SMS · Email</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-orange text-foreground rounded-3xl p-6 hover-lift">
+          <DollarSign className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Accounting</div>
+          <div className="text-xs opacity-80">Auto-reconciled</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-foreground text-background rounded-3xl p-6 hover-lift">
+          <Users className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Staff & HR</div>
+          <div className="text-xs opacity-70">Rosters that flex</div>
+        </div>
+        <div className="col-span-3 sm:col-span-2 bg-op-purple rounded-3xl p-6 hover-lift">
+          <ShoppingCart className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Inventory & POS</div>
+          <div className="text-xs opacity-70">F&B included</div>
+        </div>
+        <div className="col-span-6 sm:col-span-2 bg-op-pink rounded-3xl p-6 hover-lift">
+          <Wrench className="h-6 w-6 mb-3" />
+          <div className="font-semibold">Maintenance</div>
+          <div className="text-xs opacity-70">Tickets that close themselves</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ----------------------- Onboarding ----------------------- */
+const STEPS = [
+  { n: 1, title: "Create your workspace", body: "Add your brand, set currency and time zones. 60 seconds, no card.", color: "bg-op-purple" },
+  { n: 2, title: "Connect your channels", body: "Booking.com, Airbnb, Expedia, Google Hotels — we sync inventory live.", color: "bg-op-pink" },
+  { n: 3, title: "Import your rooms", body: "Drop a CSV or pull from your old PMS. We map fields automatically.", color: "bg-op-peach" },
+  { n: 4, title: "Meet your AI copilot", body: "Train it on your SOPs in one click. It listens, drafts, and acts.", color: "bg-op-beige" },
+  { n: 5, title: "Go live with your team", body: "Invite staff, assign roles, and run your property from day one.", color: "bg-op-orange" },
+];
+
+function Onboarding() {
+  const [step, setStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    setProgress(0);
+    const start = performance.now();
+    const dur = 4000;
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / dur);
+      setProgress(p);
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else setStep((s) => (s + 1) % STEPS.length);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [step]);
+
+  return (
+    <section className="px-3 sm:px-6 py-6">
+      <div className="rounded-[36px] bg-foreground text-background p-8 sm:p-16">
+        <div className="max-w-3xl">
+          <p className="text-background/60 mb-3">Onboarding</p>
+          <h2 className="font-display text-5xl sm:text-7xl">
+            Live in <span className="text-op-purple">five steps</span>
+          </h2>
+          <p className="mt-6 text-lg text-background/70 max-w-xl">
+            From signup to a fully running hotel, OPERIX guides you with live previews, smart defaults, and a copilot that never sleeps.
+          </p>
+        </div>
+
+        <div className="mt-12 grid lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+          <div className="space-y-3">
+            {STEPS.map((s, i) => {
+              const active = i === step;
+              const done = i < step;
+              return (
+                <button
+                  key={s.n}
+                  onClick={() => setStep(i)}
+                  className={`w-full text-left rounded-3xl p-5 flex items-start gap-4 transition-all duration-500 ${
+                    active ? `${s.color} text-foreground scale-[1.01]` : done ? "bg-white/10" : "bg-white/5 hover:bg-white/10"
+                  }`}
+                >
+                  <span className={`h-10 w-10 shrink-0 rounded-full flex items-center justify-center font-semibold ${active ? "bg-foreground text-background" : done ? "bg-op-success text-foreground" : "bg-white/10"}`}>
+                    {done ? <CheckCircle2 className="h-5 w-5" /> : s.n}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold">{s.title}</div>
+                    <p className={`text-sm mt-1 ${active ? "text-foreground/80" : "text-background/60"}`}>{s.body}</p>
+                    {active && (
+                      <div className="mt-3 h-1 rounded-full bg-foreground/10 overflow-hidden">
+                        <div className="h-full bg-foreground" style={{ width: `${progress * 100}%` }} />
+                      </div>
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className={`rounded-3xl p-6 sm:p-8 transition-colors duration-500 ${STEPS[step].color} text-foreground min-h-[420px] flex flex-col`}>
+            <div className="text-xs font-medium opacity-70">Step 0{STEPS[step].n} preview</div>
+            <div className="font-display text-3xl mt-2">{STEPS[step].title}</div>
+
+            <div className="mt-6 flex-1 bg-white rounded-2xl p-5 space-y-3">
+              {step === 0 && (
+                <>
+                  <PreviewField label="Workspace name" value="Aurelia Resorts" />
+                  <PreviewField label="Currency" value="EUR · €" />
+                  <PreviewField label="Time zone" value="Europe/Lisbon" />
+                </>
+              )}
+              {step === 1 && (
+                <div className="grid grid-cols-2 gap-2">
+                  {["Booking.com","Airbnb","Expedia","Google Hotels"].map((c, i) => (
+                    <div key={c} className="rounded-xl bg-muted px-3 py-3 flex items-center justify-between">
+                      <span className="text-sm font-medium">{c}</span>
+                      <span className={`h-2 w-2 rounded-full ${i < 3 ? "bg-op-success animate-pulse-dot" : "bg-muted-foreground/30"}`} />
+                    </div>
+                  ))}
+                </div>
+              )}
+              {step === 2 && (
+                <>
+                  <div className="text-xs text-muted-foreground">Importing rooms.csv</div>
+                  <div className="h-2 bg-muted rounded-full overflow-hidden"><div className="h-full bg-foreground" style={{ width: `${30 + progress * 70}%` }} /></div>
+                  <ul className="text-sm space-y-1 mt-3">
+                    {["Mapping room types","Inferring rates","Validating availability"].map((l) => (
+                      <li key={l} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-600" />{l}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {step === 3 && (
+                <>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground"><Bot className="h-3.5 w-3.5" /> Copilot · training on your SOPs</div>
+                  <div className="rounded-2xl bg-muted px-4 py-3 text-sm">Generating welcome message in 6 languages…</div>
+                  <div className="flex gap-1">
+                    {[0,1,2].map((d) => (
+                      <span key={d} className="h-2 w-2 rounded-full bg-foreground animate-pulse-dot" style={{ animationDelay: `${d * 0.15}s` }} />
+                    ))}
+                  </div>
+                </>
+              )}
+              {step === 4 && (
+                <>
+                  <div className="text-xs text-muted-foreground">Invite your team</div>
+                  {["regina@aurelia.co · Owner","ops@aurelia.co · Manager","desk@aurelia.co · Agent"].map((m) => (
+                    <div key={m} className="flex items-center justify-between bg-muted rounded-xl px-3 py-2 text-sm">
+                      <span>{m}</span>
+                      <span className="text-xs text-emerald-700 font-semibold">Sent</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function PreviewField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl bg-muted px-3 py-2.5">
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="text-sm font-medium">{value}</div>
+    </div>
+  );
+}
+
 function Landing() {
   return (
     <main className="bg-background text-foreground">
