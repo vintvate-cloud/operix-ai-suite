@@ -448,12 +448,25 @@ const SHIFT_SECTIONS = [
     title: "Answer guests in seconds, in any language, on any channel",
   },
   {
+    bg: "bg-op-peach",
+    text: "text-foreground",
+    eyebrow: "Housekeeping",
+    title: "Turn every room around faster with live AI assignments",
+  },
+  {
+    bg: "bg-op-beige",
+    text: "text-foreground",
+    eyebrow: "Finance",
+    title: "Close the books in hours, not weeks, with built-in accounting",
+  },
+  {
     bg: "bg-foreground",
     text: "text-background",
     eyebrow: "Operations",
     title: "Turn chaos into clarity across every property in your group",
   },
 ];
+
 
 function ShiftStack() {
   return (
