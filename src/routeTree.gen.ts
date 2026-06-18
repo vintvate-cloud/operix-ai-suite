@@ -15,13 +15,31 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardStaffRouteImport } from './routes/dashboard.staff'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardSecurityRouteImport } from './routes/dashboard.security'
+import { Route as DashboardRolesRouteImport } from './routes/dashboard.roles'
 import { Route as DashboardRevenueRouteImport } from './routes/dashboard.revenue'
 import { Route as DashboardReservationsRouteImport } from './routes/dashboard.reservations'
 import { Route as DashboardPropertiesRouteImport } from './routes/dashboard.properties'
+import { Route as DashboardProcurementRouteImport } from './routes/dashboard.procurement'
+import { Route as DashboardPosRouteImport } from './routes/dashboard.pos'
+import { Route as DashboardPayrollRouteImport } from './routes/dashboard.payroll'
+import { Route as DashboardMaintenanceRouteImport } from './routes/dashboard.maintenance'
+import { Route as DashboardLoyaltyRouteImport } from './routes/dashboard.loyalty'
+import { Route as DashboardInventoryRouteImport } from './routes/dashboard.inventory'
 import { Route as DashboardInboxRouteImport } from './routes/dashboard.inbox'
 import { Route as DashboardHousekeepingRouteImport } from './routes/dashboard.housekeeping'
 import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
+import { Route as DashboardFinanceRouteImport } from './routes/dashboard.finance'
+import { Route as DashboardEventsRouteImport } from './routes/dashboard.events'
+import { Route as DashboardDocumentsRouteImport } from './routes/dashboard.documents'
+import { Route as DashboardCopilotRouteImport } from './routes/dashboard.copilot'
+import { Route as DashboardConciergeRouteImport } from './routes/dashboard.concierge'
+import { Route as DashboardCmsRouteImport } from './routes/dashboard.cms'
+import { Route as DashboardChannelsRouteImport } from './routes/dashboard.channels'
+import { Route as DashboardAttendanceRouteImport } from './routes/dashboard.attendance'
+import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard.analytics'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -53,9 +71,24 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardStaffRoute = DashboardStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSecurityRoute = DashboardSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRolesRoute = DashboardRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardRevenueRoute = DashboardRevenueRouteImport.update({
@@ -73,6 +106,36 @@ const DashboardPropertiesRoute = DashboardPropertiesRouteImport.update({
   path: '/properties',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardProcurementRoute = DashboardProcurementRouteImport.update({
+  id: '/procurement',
+  path: '/procurement',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPosRoute = DashboardPosRouteImport.update({
+  id: '/pos',
+  path: '/pos',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPayrollRoute = DashboardPayrollRouteImport.update({
+  id: '/payroll',
+  path: '/payroll',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMaintenanceRoute = DashboardMaintenanceRouteImport.update({
+  id: '/maintenance',
+  path: '/maintenance',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLoyaltyRoute = DashboardLoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardInventoryRoute = DashboardInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardInboxRoute = DashboardInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -88,6 +151,51 @@ const DashboardGuestsRoute = DashboardGuestsRouteImport.update({
   path: '/guests',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardFinanceRoute = DashboardFinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardEventsRoute = DashboardEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardDocumentsRoute = DashboardDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCopilotRoute = DashboardCopilotRouteImport.update({
+  id: '/copilot',
+  path: '/copilot',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardConciergeRoute = DashboardConciergeRouteImport.update({
+  id: '/concierge',
+  path: '/concierge',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCmsRoute = DashboardCmsRouteImport.update({
+  id: '/cms',
+  path: '/cms',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardChannelsRoute = DashboardChannelsRouteImport.update({
+  id: '/channels',
+  path: '/channels',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAttendanceRoute = DashboardAttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -95,13 +203,31 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/attendance': typeof DashboardAttendanceRoute
+  '/dashboard/channels': typeof DashboardChannelsRoute
+  '/dashboard/cms': typeof DashboardCmsRoute
+  '/dashboard/concierge': typeof DashboardConciergeRoute
+  '/dashboard/copilot': typeof DashboardCopilotRoute
+  '/dashboard/documents': typeof DashboardDocumentsRoute
+  '/dashboard/events': typeof DashboardEventsRoute
+  '/dashboard/finance': typeof DashboardFinanceRoute
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/inventory': typeof DashboardInventoryRoute
+  '/dashboard/loyalty': typeof DashboardLoyaltyRoute
+  '/dashboard/maintenance': typeof DashboardMaintenanceRoute
+  '/dashboard/payroll': typeof DashboardPayrollRoute
+  '/dashboard/pos': typeof DashboardPosRoute
+  '/dashboard/procurement': typeof DashboardProcurementRoute
   '/dashboard/properties': typeof DashboardPropertiesRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/revenue': typeof DashboardRevenueRoute
+  '/dashboard/roles': typeof DashboardRolesRoute
+  '/dashboard/security': typeof DashboardSecurityRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -109,13 +235,31 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/attendance': typeof DashboardAttendanceRoute
+  '/dashboard/channels': typeof DashboardChannelsRoute
+  '/dashboard/cms': typeof DashboardCmsRoute
+  '/dashboard/concierge': typeof DashboardConciergeRoute
+  '/dashboard/copilot': typeof DashboardCopilotRoute
+  '/dashboard/documents': typeof DashboardDocumentsRoute
+  '/dashboard/events': typeof DashboardEventsRoute
+  '/dashboard/finance': typeof DashboardFinanceRoute
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/inventory': typeof DashboardInventoryRoute
+  '/dashboard/loyalty': typeof DashboardLoyaltyRoute
+  '/dashboard/maintenance': typeof DashboardMaintenanceRoute
+  '/dashboard/payroll': typeof DashboardPayrollRoute
+  '/dashboard/pos': typeof DashboardPosRoute
+  '/dashboard/procurement': typeof DashboardProcurementRoute
   '/dashboard/properties': typeof DashboardPropertiesRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/revenue': typeof DashboardRevenueRoute
+  '/dashboard/roles': typeof DashboardRolesRoute
+  '/dashboard/security': typeof DashboardSecurityRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -125,13 +269,31 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/attendance': typeof DashboardAttendanceRoute
+  '/dashboard/channels': typeof DashboardChannelsRoute
+  '/dashboard/cms': typeof DashboardCmsRoute
+  '/dashboard/concierge': typeof DashboardConciergeRoute
+  '/dashboard/copilot': typeof DashboardCopilotRoute
+  '/dashboard/documents': typeof DashboardDocumentsRoute
+  '/dashboard/events': typeof DashboardEventsRoute
+  '/dashboard/finance': typeof DashboardFinanceRoute
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/housekeeping': typeof DashboardHousekeepingRoute
   '/dashboard/inbox': typeof DashboardInboxRoute
+  '/dashboard/inventory': typeof DashboardInventoryRoute
+  '/dashboard/loyalty': typeof DashboardLoyaltyRoute
+  '/dashboard/maintenance': typeof DashboardMaintenanceRoute
+  '/dashboard/payroll': typeof DashboardPayrollRoute
+  '/dashboard/pos': typeof DashboardPosRoute
+  '/dashboard/procurement': typeof DashboardProcurementRoute
   '/dashboard/properties': typeof DashboardPropertiesRoute
   '/dashboard/reservations': typeof DashboardReservationsRoute
   '/dashboard/revenue': typeof DashboardRevenueRoute
+  '/dashboard/roles': typeof DashboardRolesRoute
+  '/dashboard/security': typeof DashboardSecurityRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/staff': typeof DashboardStaffRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -142,13 +304,31 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/analytics'
+    | '/dashboard/attendance'
+    | '/dashboard/channels'
+    | '/dashboard/cms'
+    | '/dashboard/concierge'
+    | '/dashboard/copilot'
+    | '/dashboard/documents'
+    | '/dashboard/events'
+    | '/dashboard/finance'
     | '/dashboard/guests'
     | '/dashboard/housekeeping'
     | '/dashboard/inbox'
+    | '/dashboard/inventory'
+    | '/dashboard/loyalty'
+    | '/dashboard/maintenance'
+    | '/dashboard/payroll'
+    | '/dashboard/pos'
+    | '/dashboard/procurement'
     | '/dashboard/properties'
     | '/dashboard/reservations'
     | '/dashboard/revenue'
+    | '/dashboard/roles'
+    | '/dashboard/security'
     | '/dashboard/settings'
+    | '/dashboard/staff'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -156,13 +336,31 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/analytics'
+    | '/dashboard/attendance'
+    | '/dashboard/channels'
+    | '/dashboard/cms'
+    | '/dashboard/concierge'
+    | '/dashboard/copilot'
+    | '/dashboard/documents'
+    | '/dashboard/events'
+    | '/dashboard/finance'
     | '/dashboard/guests'
     | '/dashboard/housekeeping'
     | '/dashboard/inbox'
+    | '/dashboard/inventory'
+    | '/dashboard/loyalty'
+    | '/dashboard/maintenance'
+    | '/dashboard/payroll'
+    | '/dashboard/pos'
+    | '/dashboard/procurement'
     | '/dashboard/properties'
     | '/dashboard/reservations'
     | '/dashboard/revenue'
+    | '/dashboard/roles'
+    | '/dashboard/security'
     | '/dashboard/settings'
+    | '/dashboard/staff'
     | '/dashboard'
   id:
     | '__root__'
@@ -171,13 +369,31 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/analytics'
+    | '/dashboard/attendance'
+    | '/dashboard/channels'
+    | '/dashboard/cms'
+    | '/dashboard/concierge'
+    | '/dashboard/copilot'
+    | '/dashboard/documents'
+    | '/dashboard/events'
+    | '/dashboard/finance'
     | '/dashboard/guests'
     | '/dashboard/housekeeping'
     | '/dashboard/inbox'
+    | '/dashboard/inventory'
+    | '/dashboard/loyalty'
+    | '/dashboard/maintenance'
+    | '/dashboard/payroll'
+    | '/dashboard/pos'
+    | '/dashboard/procurement'
     | '/dashboard/properties'
     | '/dashboard/reservations'
     | '/dashboard/revenue'
+    | '/dashboard/roles'
+    | '/dashboard/security'
     | '/dashboard/settings'
+    | '/dashboard/staff'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -233,11 +449,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/staff': {
+      id: '/dashboard/staff'
+      path: '/staff'
+      fullPath: '/dashboard/staff'
+      preLoaderRoute: typeof DashboardStaffRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
       fullPath: '/dashboard/settings'
       preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/security': {
+      id: '/dashboard/security'
+      path: '/security'
+      fullPath: '/dashboard/security'
+      preLoaderRoute: typeof DashboardSecurityRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/roles': {
+      id: '/dashboard/roles'
+      path: '/roles'
+      fullPath: '/dashboard/roles'
+      preLoaderRoute: typeof DashboardRolesRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/revenue': {
@@ -261,6 +498,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPropertiesRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/procurement': {
+      id: '/dashboard/procurement'
+      path: '/procurement'
+      fullPath: '/dashboard/procurement'
+      preLoaderRoute: typeof DashboardProcurementRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/pos': {
+      id: '/dashboard/pos'
+      path: '/pos'
+      fullPath: '/dashboard/pos'
+      preLoaderRoute: typeof DashboardPosRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/payroll': {
+      id: '/dashboard/payroll'
+      path: '/payroll'
+      fullPath: '/dashboard/payroll'
+      preLoaderRoute: typeof DashboardPayrollRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/maintenance': {
+      id: '/dashboard/maintenance'
+      path: '/maintenance'
+      fullPath: '/dashboard/maintenance'
+      preLoaderRoute: typeof DashboardMaintenanceRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/loyalty': {
+      id: '/dashboard/loyalty'
+      path: '/loyalty'
+      fullPath: '/dashboard/loyalty'
+      preLoaderRoute: typeof DashboardLoyaltyRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/inventory': {
+      id: '/dashboard/inventory'
+      path: '/inventory'
+      fullPath: '/dashboard/inventory'
+      preLoaderRoute: typeof DashboardInventoryRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/inbox': {
       id: '/dashboard/inbox'
       path: '/inbox'
@@ -282,28 +561,127 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardGuestsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/finance': {
+      id: '/dashboard/finance'
+      path: '/finance'
+      fullPath: '/dashboard/finance'
+      preLoaderRoute: typeof DashboardFinanceRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/events': {
+      id: '/dashboard/events'
+      path: '/events'
+      fullPath: '/dashboard/events'
+      preLoaderRoute: typeof DashboardEventsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/documents': {
+      id: '/dashboard/documents'
+      path: '/documents'
+      fullPath: '/dashboard/documents'
+      preLoaderRoute: typeof DashboardDocumentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/copilot': {
+      id: '/dashboard/copilot'
+      path: '/copilot'
+      fullPath: '/dashboard/copilot'
+      preLoaderRoute: typeof DashboardCopilotRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/concierge': {
+      id: '/dashboard/concierge'
+      path: '/concierge'
+      fullPath: '/dashboard/concierge'
+      preLoaderRoute: typeof DashboardConciergeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/cms': {
+      id: '/dashboard/cms'
+      path: '/cms'
+      fullPath: '/dashboard/cms'
+      preLoaderRoute: typeof DashboardCmsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/channels': {
+      id: '/dashboard/channels'
+      path: '/channels'
+      fullPath: '/dashboard/channels'
+      preLoaderRoute: typeof DashboardChannelsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/attendance': {
+      id: '/dashboard/attendance'
+      path: '/attendance'
+      fullPath: '/dashboard/attendance'
+      preLoaderRoute: typeof DashboardAttendanceRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/analytics': {
+      id: '/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardAttendanceRoute: typeof DashboardAttendanceRoute
+  DashboardChannelsRoute: typeof DashboardChannelsRoute
+  DashboardCmsRoute: typeof DashboardCmsRoute
+  DashboardConciergeRoute: typeof DashboardConciergeRoute
+  DashboardCopilotRoute: typeof DashboardCopilotRoute
+  DashboardDocumentsRoute: typeof DashboardDocumentsRoute
+  DashboardEventsRoute: typeof DashboardEventsRoute
+  DashboardFinanceRoute: typeof DashboardFinanceRoute
   DashboardGuestsRoute: typeof DashboardGuestsRoute
   DashboardHousekeepingRoute: typeof DashboardHousekeepingRoute
   DashboardInboxRoute: typeof DashboardInboxRoute
+  DashboardInventoryRoute: typeof DashboardInventoryRoute
+  DashboardLoyaltyRoute: typeof DashboardLoyaltyRoute
+  DashboardMaintenanceRoute: typeof DashboardMaintenanceRoute
+  DashboardPayrollRoute: typeof DashboardPayrollRoute
+  DashboardPosRoute: typeof DashboardPosRoute
+  DashboardProcurementRoute: typeof DashboardProcurementRoute
   DashboardPropertiesRoute: typeof DashboardPropertiesRoute
   DashboardReservationsRoute: typeof DashboardReservationsRoute
   DashboardRevenueRoute: typeof DashboardRevenueRoute
+  DashboardRolesRoute: typeof DashboardRolesRoute
+  DashboardSecurityRoute: typeof DashboardSecurityRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardStaffRoute: typeof DashboardStaffRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardAttendanceRoute: DashboardAttendanceRoute,
+  DashboardChannelsRoute: DashboardChannelsRoute,
+  DashboardCmsRoute: DashboardCmsRoute,
+  DashboardConciergeRoute: DashboardConciergeRoute,
+  DashboardCopilotRoute: DashboardCopilotRoute,
+  DashboardDocumentsRoute: DashboardDocumentsRoute,
+  DashboardEventsRoute: DashboardEventsRoute,
+  DashboardFinanceRoute: DashboardFinanceRoute,
   DashboardGuestsRoute: DashboardGuestsRoute,
   DashboardHousekeepingRoute: DashboardHousekeepingRoute,
   DashboardInboxRoute: DashboardInboxRoute,
+  DashboardInventoryRoute: DashboardInventoryRoute,
+  DashboardLoyaltyRoute: DashboardLoyaltyRoute,
+  DashboardMaintenanceRoute: DashboardMaintenanceRoute,
+  DashboardPayrollRoute: DashboardPayrollRoute,
+  DashboardPosRoute: DashboardPosRoute,
+  DashboardProcurementRoute: DashboardProcurementRoute,
   DashboardPropertiesRoute: DashboardPropertiesRoute,
   DashboardReservationsRoute: DashboardReservationsRoute,
   DashboardRevenueRoute: DashboardRevenueRoute,
+  DashboardRolesRoute: DashboardRolesRoute,
+  DashboardSecurityRoute: DashboardSecurityRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardStaffRoute: DashboardStaffRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

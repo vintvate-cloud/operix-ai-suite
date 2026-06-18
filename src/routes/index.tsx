@@ -880,6 +880,44 @@ function PreviewField({ label, value }: { label: string; value: string }) {
   );
 }
 
+const FLAGSHIPS = [
+  { t: "AI Revenue Manager", d: "Dynamic pricing, demand curves, competitor rate intelligence — automated." },
+  { t: "AI Concierge", d: "24/7 guest agent across Web, WhatsApp and Mobile. Books rooms, food and services." },
+  { t: "AI Copilot", d: "Ask anything. Generates reports, runs actions, schedules staff." },
+  { t: "AI Reputation Manager", d: "Tracks reviews across Google + OTAs. Sentiment analysis & auto-responses." },
+  { t: "Predictive Maintenance", d: "Forecasts equipment failure 7–30 days out. Auto-creates work orders." },
+  { t: "Dynamic Pricing Engine", d: "Real-time room pricing tuned to occupancy, demand and seasonality." },
+  { t: "Multi-Property Command Center", d: "Operate chains, groups and franchises from a single pane." },
+  { t: "Workforce Optimization AI", d: "Forecast staffing, build rosters and predict absenteeism." },
+  { t: "Guest 360 Intelligence", d: "Unified guest profile with preferences, lifetime value and intent." },
+  { t: "Natural Language BI", d: "`Why did revenue drop last week?` — answered with charts and actions." },
+];
+
+function FlagshipAI() {
+  return (
+    <section id="flagship" className="bg-foreground text-background rounded-[36px] mx-3 sm:mx-6 my-6 px-6 sm:px-12 py-20 sm:py-28">
+      <div className="max-w-6xl mx-auto">
+        <p className="text-sm text-op-purple uppercase tracking-widest">Flagship AI</p>
+        <h2 className="font-display text-5xl sm:text-7xl leading-[0.95] mt-4 max-w-4xl">
+          Ten reasons hotels rip out their legacy PMS.
+        </h2>
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {FLAGSHIPS.map((f, i) => (
+            <div
+              key={f.t}
+              className="group bg-white/5 hover:bg-white/10 transition rounded-3xl p-6 border border-white/10"
+            >
+              <div className="text-xs text-op-purple">{String(i + 1).padStart(2, "0")}</div>
+              <div className="font-display text-2xl mt-2">{f.t}</div>
+              <p className="text-sm text-background/60 mt-2 leading-relaxed">{f.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Landing() {
   return (
     <main className="bg-background text-foreground">
@@ -898,6 +936,7 @@ function Landing() {
       <RevenueCard />
       <GuestExperience />
       <Ecosystem />
+      <FlagshipAI />
       <BentoFeatures />
       <Integrations />
       <ShiftStack />
