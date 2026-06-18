@@ -898,6 +898,7 @@ function Landing() {
       <RevenueCard />
       <GuestExperience />
       <Ecosystem />
+      <FlagshipAI />
       <BentoFeatures />
       <Integrations />
       <ShiftStack />
