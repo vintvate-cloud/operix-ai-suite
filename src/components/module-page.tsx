@@ -1,3 +1,4 @@
+"use client";
 import type { ReactNode } from "react";
 import { PageHeader, StatCard, AIInsight, SimpleTable, Card } from "@/components/dashboard-shell";
 

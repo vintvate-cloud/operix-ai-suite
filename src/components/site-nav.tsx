@@ -1,4 +1,5 @@
-import { Link } from "@tanstack/react-router";
+"use client";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
@@ -14,19 +15,19 @@ export function SiteNav() {
     <>
       <header className="fixed top-3 inset-x-3 sm:inset-x-6 z-50 flex justify-center">
         <nav className="w-full max-w-6xl bg-white rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.08)] flex items-center justify-between pl-5 pr-2 py-2">
-          <Link to="/" className="font-display text-2xl tracking-tight">
+          <Link href="/" className="font-display text-2xl tracking-tight">
             OPERIX
           </Link>
           <div className="hidden lg:flex items-center gap-8 text-sm font-medium text-foreground/80">
             {NAV_LINKS.map((l) => (
-              <Link key={l.to} to={l.to} className="hover:text-foreground">{l.label}</Link>
+              <Link key={l.to} href={l.to} className="hover:text-foreground">{l.label}</Link>
             ))}
             <a href="#enterprise" className="hover:text-foreground">Enterprise</a>
-            <Link to="/sign-in" className="hover:text-foreground">Login</Link>
+            <Link href="/sign-in" className="hover:text-foreground">Login</Link>
           </div>
           <div className="flex items-center gap-2">
             <Link
-              to="/sign-up"
+              href="/sign-up"
               className="hidden sm:inline-flex items-center bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold hover:opacity-90 transition"
             >
               Book a demo
@@ -54,15 +55,15 @@ export function SiteNav() {
             </div>
             <nav className="mt-10 flex flex-col gap-2 text-2xl font-display">
               {NAV_LINKS.map((l) => (
-                <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="py-3 border-b border-border">
+                <Link key={l.to} href={l.to} onClick={() => setOpen(false)} className="py-3 border-b border-border">
                   {l.label}
                 </Link>
               ))}
               <a href="#enterprise" onClick={() => setOpen(false)} className="py-3 border-b border-border">Enterprise</a>
-              <Link to="/sign-in" onClick={() => setOpen(false)} className="py-3 border-b border-border">Login</Link>
+              <Link href="/sign-in" onClick={() => setOpen(false)} className="py-3 border-b border-border">Login</Link>
             </nav>
             <Link
-              to="/sign-up"
+              href="/sign-up"
               onClick={() => setOpen(false)}
               className="mt-auto bg-foreground text-background rounded-full px-5 py-4 text-center font-semibold"
             >
