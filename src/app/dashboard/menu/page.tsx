@@ -3,83 +3,192 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { db } from "@/lib/firebase";
-import { collection, addDoc, onSnapshot, query, where, deleteDoc, doc } from "firebase/firestore";
-import { Trash2, Utensils, Coffee, Flame } from "lucide-react";
+import { collection, onSnapshot, query, where, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { Plus, Trash2, Utensils, X, Edit2 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard-shell";
 
-export default function MenuManager() {
-  const { user, activeProperty } = useAuth();
-  const [menu, setMenu] = useState<any[]>([]);
-  const [newMenuItem, setNewMenuItem] = useState({ name: "", price: "", category: "Mains" });
+export default function MenuPage() {
+  const { user, userData, activeProperty } = useAuth();
+  const [dataList, setDataList] = useState<any[]>([]);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const initialForm = {
+    itemName: "",
+    category: "",
+    price: "",
+    description: ""
+  };
+  
+  const [formData, setFormData] = useState<any>(initialForm);
 
   useEffect(() => {
     if (!user) return;
-    const qMenu = query(collection(db, "menuItems"), where("ownerId", "==", user.uid));
-    const unsub = onSnapshot(qMenu, (snap) => {
-      let items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      if (activeProperty) items = items.filter(i => !i.propertyId || i.propertyId === activeProperty);
-      setMenu(items);
+    let q = query(collection(db, "menu"), where("ownerId", "==", user.uid));
+    if (activeProperty) {
+      q = query(collection(db, "menu"), where("ownerId", "==", user.uid), where("propertyId", "==", activeProperty));
+    }
+    const unsub = onSnapshot(q, (snap) => {
+      setDataList(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     });
     return unsub;
   }, [user, activeProperty]);
 
-  const handleAdd = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
-    await addDoc(collection(db, "menuItems"), {
-      ownerId: user.uid,
-      propertyId: activeProperty || null,
-      name: newMenuItem.name,
-      price: parseFloat(newMenuItem.price),
-      category: newMenuItem.category,
-      createdAt: Date.now()
-    });
-    setNewMenuItem({ name: "", price: "", category: "Mains" });
+    setIsSubmitting(true);
+    
+    try {
+      const docId = formData.id || crypto.randomUUID();
+      await setDoc(doc(db, "menu", docId), {
+        ...formData,
+        id: docId,
+        ownerId: user.uid,
+        propertyId: activeProperty || null,
+        updatedAt: Date.now(),
+        createdAt: formData.createdAt || Date.now()
+      });
+
+      setIsAdding(false);
+      setFormData(initialForm);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const getIcon = (cat: string) => {
-    if (cat === "Drinks") return <Coffee className="h-5 w-5" />;
-    if (cat === "Mains") return <Flame className="h-5 w-5" />;
-    return <Utensils className="h-5 w-5" />;
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this entry?")) {
+      await deleteDoc(doc(db, "menu", id));
+    }
+  };
+
+  const handleEdit = (item: any) => {
+    setFormData(item);
+    setIsAdding(true);
   };
 
   return (
-    <div className="flex flex-col">
-      <PageHeader eyebrow="Configuration" title="Menu Management" />
-      
-      <div className="bg-card rounded-3xl p-6 border border-border shadow-sm mt-4">
-        <div className="mb-6">
-          <h2 className="text-xl font-display mb-4">Add New Item</h2>
-          <form onSubmit={handleAdd} className="flex flex-col sm:flex-row gap-4 bg-muted p-4 rounded-2xl">
-            <input required placeholder="Item Name (e.g. Avocado Toast)" className="flex-1 px-4 py-3 rounded-xl outline-none border border-border focus:ring-2 focus:ring-op-purple" value={newMenuItem.name} onChange={e=>setNewMenuItem({...newMenuItem, name:e.target.value})}/>
-            <input required type="number" step="0.01" placeholder="Price ($)" className="w-full sm:w-32 px-4 py-3 rounded-xl outline-none border border-border focus:ring-2 focus:ring-op-purple" value={newMenuItem.price} onChange={e=>setNewMenuItem({...newMenuItem, price:e.target.value})}/>
-            <input required placeholder="Category (e.g. Mains, Drinks)" className="w-full sm:w-48 px-4 py-3 rounded-xl outline-none border border-border focus:ring-2 focus:ring-op-purple" value={newMenuItem.category} onChange={e=>setNewMenuItem({...newMenuItem, category:e.target.value})}/>
-            <button type="submit" className="bg-op-purple text-foreground px-8 py-3 font-bold rounded-xl hover:opacity-90 transition">Save Item</button>
-          </form>
-        </div>
+    <>
+      <PageHeader 
+        eyebrow="Module" 
+        title="Menu Items" 
+        action={
+          <button onClick={() => { setFormData(initialForm); setIsAdding(true); }} className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" /> Add Entry
+          </button>
+        } 
+      />
 
-        <h2 className="text-xl font-display mb-4 border-t border-border pt-6">Current Menu</h2>
-        {menu.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">Your menu is empty. Add your first dish above!</div>
-        ) : (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-            {menu.map(m => (
-              <div key={m.id} className="bg-background border border-border p-4 rounded-2xl flex justify-between items-center shadow-sm group">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 bg-op-purple/10 text-op-purple rounded-lg flex items-center justify-center">
-                    {getIcon(m.category)}
-                  </div>
-                  <div>
-                    <div className="font-bold text-sm">{m.name}</div>
-                    <div className="text-xs text-muted-foreground">${m.price.toFixed(2)} &bull; {m.category}</div>
-                  </div>
-                </div>
-                <button onClick={() => deleteDoc(doc(db, "menuItems", m.id))} className="text-rose-500 p-2 opacity-0 group-hover:opacity-100 transition hover:bg-rose-500/10 rounded-full"><Trash2 className="h-4 w-4"/></button>
+      {isAdding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-background border border-border rounded-3xl p-6 w-full max-w-2xl shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-display text-xl">{formData.id ? 'Edit' : 'New'} Menu Items Entry</h3>
+              <button onClick={() => setIsAdding(false)} className="p-2 hover:bg-muted rounded-full transition">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Item Name</label>
+                <input 
+                  required={true} 
+                  type="text" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.itemName || ''} 
+                  onChange={e => setFormData({...formData, itemName: e.target.value})} 
+                />
               </div>
-            ))}
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Category</label>
+                <input 
+                  required={true} 
+                  type="text" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.category || ''} 
+                  onChange={e => setFormData({...formData, category: e.target.value})} 
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Price</label>
+                <input 
+                  required={true} 
+                  type="number" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.price || ''} 
+                  onChange={e => setFormData({...formData, price: Number(e.target.value)})} 
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Description</label>
+                <input 
+                  required={false} 
+                  type="text" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.description || ''} 
+                  onChange={e => setFormData({...formData, description: e.target.value})} 
+                />
+              </div>
+              <div className="sm:col-span-2 flex justify-end gap-2 mt-4">
+                <button type="button" onClick={() => setIsAdding(false)} className="px-6 py-3 rounded-xl font-semibold hover:bg-muted transition">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="bg-op-purple text-foreground px-8 py-3 rounded-xl font-bold transition hover:opacity-90 disabled:opacity-50">
+                  {isSubmitting ? "Saving..." : "Save Entry"}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
+        </div>
+      )}
+
+      <div className="bg-card rounded-3xl border border-border overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-muted/50 border-b border-border">
+              <tr>
+                <th className="p-4 font-semibold text-muted-foreground">Item Name</th>
+                <th className="p-4 font-semibold text-muted-foreground">Category</th>
+                <th className="p-4 font-semibold text-muted-foreground">Price</th>
+                <th className="p-4 font-semibold text-muted-foreground">Description</th>
+                <th className="p-4 font-semibold text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataList.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="p-8 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <Utensils className="h-8 w-8 text-muted-foreground/50" />
+                      No data found. Create your first entry!
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                dataList.map(item => (
+                  <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                    <td className="p-4">{item.itemName}</td>
+                    <td className="p-4">{item.category}</td>
+                    <td className="p-4">{item.price}</td>
+                    <td className="p-4">{item.description}</td>
+                    <td className="p-4 flex gap-2">
+                      <button onClick={() => handleEdit(item)} className="text-blue-500 hover:bg-blue-500/10 p-2 rounded-full transition">
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button onClick={() => handleDelete(item.id)} className="text-rose-500 hover:bg-rose-500/10 p-2 rounded-full transition">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 }

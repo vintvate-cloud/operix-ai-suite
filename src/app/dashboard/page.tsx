@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import {
   Bot, Sparkles, TrendingUp, TrendingDown, CheckCircle2, Clock, Bed, Hotel,
-  MessageCircle, DollarSign, ArrowUpRight, Plus, X
+  MessageCircle, DollarSign, ArrowUpRight, Plus, X, Users, Activity,
+  Briefcase, BarChart3, Receipt, Wallet, UserPlus, Target, Megaphone
 } from "lucide-react";
 import { PageHeader } from "@/components/dashboard-shell";
 import { useAuth } from "@/lib/auth-context";
@@ -15,195 +16,346 @@ export default function Overview() {
   
   if (!userData) return <div className="p-8 text-center animate-pulse">Loading dashboard...</div>;
 
-  const role = userData.role || "Super Admin";
+  const role = userData.role || "Owner";
 
-  if (role === "Housekeeping") {
-    return (
-      <div className="text-center p-12 max-w-2xl mx-auto">
-        <Bed className="h-16 w-16 mx-auto text-op-purple mb-4" />
-        <h2 className="text-3xl font-display mb-2">Housekeeping Dashboard</h2>
-        <p className="text-muted-foreground mb-6">Welcome to your daily shift. You can view and complete your assigned room tasks in the Housekeeping module.</p>
-        <a href="/dashboard/housekeeping" className="bg-op-purple text-foreground px-6 py-3 rounded-full font-bold">Go to Tasks</a>
-      </div>
-    );
-  }
+  // Platform Level
+  if (role === "Super Admin") return <SuperAdminOverview />;
 
-  if (role === "Front Desk") {
-    return (
-      <div className="text-center p-12 max-w-2xl mx-auto">
-        <Hotel className="h-16 w-16 mx-auto text-op-purple mb-4" />
-        <h2 className="text-3xl font-display mb-2">Front Desk Dashboard</h2>
-        <p className="text-muted-foreground mb-6">Welcome to your shift. You can manage guest arrivals, check-ins, and reservations.</p>
-        <a href="/dashboard/reservations" className="bg-op-purple text-foreground px-6 py-3 rounded-full font-bold">View Reservations</a>
-      </div>
-    );
-  }
+  // Executive Level
+  if (role === "Owner") return <OwnerOverview />;
+  if (role === "General Manager") return <GeneralManagerOverview />;
 
-  if (role === "Restaurant") {
-    return <RestaurantOverview />;
-  }
+  // Department Managers
+  if (role === "Finance" || role === "Finance Manager") return <FinanceOverview />;
+  if (role === "HR" || role === "HR Manager") return <HROverview />;
+  if (role === "Sales" || role === "Sales Manager") return <SalesOverview />;
+  if (role === "Marketing" || role === "Marketing Manager") return <MarketingOverview />;
 
-  if (userData.businessType === "restaurant") return <RestaurantOverview />;
-  if (userData.businessType === "gym") return <GymOverview />;
-  if (userData.businessType === "clinic") return <ClinicOverview />;
-  if (userData.businessType === "construction") return <ConstructionOverview />;
+  // Operational Level
+  if (role === "Housekeeping") return <HousekeepingOverview />;
+  if (role === "Front Desk") return <FrontDeskOverview />;
+  if (role === "Restaurant") return <RestaurantOverview />;
 
-  // Default to General Manager / Super Admin
-  return <GeneralManagerOverview />;
+  // Default Employee fallback
+  return <EmployeeOverview />;
 }
 
+// -------------------------------------------------------------------------------------------------
+// PLATFORM SUPER ADMIN DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function SuperAdminOverview() {
+  return (
+    <>
+      <PageHeader eyebrow="Platform Management" title="Super Admin Console" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { l: "Total Organizations", v: "142", sub: "+12 this month", icon: Building2 },
+          { l: "MRR", v: "$42,500", sub: "+5.2% growth", icon: DollarSign },
+          { l: "Active Users", v: "3,892", sub: "99.9% uptime", icon: Activity },
+          { l: "Churn Rate", v: "1.2%", sub: "-0.4% from last month", icon: TrendingDown },
+        ].map(k => (
+          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
+            <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4">
+              <k.icon className="h-4 w-4" /> {k.l}
+            </div>
+            <div className="font-display text-4xl">{k.v}</div>
+            <div className="mt-2 text-xs opacity-70">{k.sub}</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid lg:grid-cols-2 gap-6">
+        <div className="bg-card border border-border rounded-3xl p-6">
+          <h3 className="font-semibold mb-4 flex items-center gap-2"><Sparkles className="h-4 w-4 text-op-purple" /> Platform Health</h3>
+          <p className="text-sm text-muted-foreground">All systems operational. Redis cache hit rate: 94%. Database CPU: 12%.</p>
+        </div>
+        <div className="bg-card border border-border rounded-3xl p-6">
+          <h3 className="font-semibold mb-4 flex items-center gap-2"><ArrowUpRight className="h-4 w-4 text-op-success" /> Recent Signups</h3>
+          <p className="text-sm text-muted-foreground">Oasis Resorts (Premium Plan) just onboarded 12 mins ago.</p>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// ORGANIZATION OWNER DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function OwnerOverview() {
+  const { userData } = useAuth();
+  return (
+    <>
+      <PageHeader eyebrow="Executive Summary" title={`Welcome, ${userData?.name || "Owner"}`} />
+      <div className="bg-op-purple/10 border border-op-purple/20 text-op-purple rounded-2xl p-4 mb-6 flex items-center gap-3">
+        <Sparkles className="h-5 w-5" />
+        <div>
+          <div className="font-semibold">AI Insight: Revenue is up 14% compared to last Tuesday.</div>
+          <div className="text-sm opacity-80">This is largely driven by increased footfall in your central branch.</div>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { l: "Total Revenue", v: "$12,450", bg: "bg-op-purple text-foreground" },
+          { l: "Net Profit", v: "$3,800", bg: "bg-op-success text-emerald-950" },
+          { l: "Total Expenses", v: "$8,650", bg: "bg-op-peach text-orange-950" },
+          { l: "Active Employees", v: "24", bg: "bg-muted" },
+        ].map(k => (
+          <div key={k.l} className={`${k.bg} rounded-3xl p-5 hover-lift shadow-sm`}>
+            <div className="text-sm font-medium opacity-80 mb-2">{k.l}</div>
+            <div className="font-display text-4xl">{k.v}</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-card rounded-3xl p-6 border border-border h-64 flex items-center justify-center">
+          <div className="text-center text-muted-foreground"><BarChart3 className="h-8 w-8 mx-auto mb-2 opacity-50"/> Revenue vs Expenses Trend</div>
+        </div>
+        <div className="bg-card rounded-3xl p-6 border border-border">
+          <h3 className="font-semibold mb-4">Pending Approvals</h3>
+          <ul className="space-y-3 text-sm">
+            <li className="flex justify-between items-center p-3 bg-muted rounded-xl">Purchase Order #102 <button className="text-op-purple font-bold">Review</button></li>
+            <li className="flex justify-between items-center p-3 bg-muted rounded-xl">Payroll Run (July) <button className="text-op-purple font-bold">Review</button></li>
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// FINANCE MANAGER DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function FinanceOverview() {
+  return (
+    <>
+      <PageHeader eyebrow="Finance Department" title="Financial Dashboard" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { l: "Cash Flow", v: "+$4,200", icon: Wallet },
+          { l: "Accounts Receivable", v: "$12,500", icon: ArrowUpRight },
+          { l: "Accounts Payable", v: "$8,300", icon: TrendingDown },
+          { l: "Profit Margin", v: "28.4%", icon: DollarSign },
+        ].map(k => (
+          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
+            <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
+            <div className="font-display text-4xl">{k.v}</div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-card rounded-3xl p-6 border border-border">
+        <h3 className="font-semibold mb-4">Recent Transactions</h3>
+        <div className="text-muted-foreground text-sm text-center py-8">Waiting for ledger entries...</div>
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// HR MANAGER DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function HROverview() {
+  return (
+    <>
+      <PageHeader eyebrow="Human Resources" title="Workforce Overview" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { l: "Headcount", v: "42", icon: Users },
+          { l: "On Leave Today", v: "3", icon: Clock },
+          { l: "Open Roles", v: "2", icon: Briefcase },
+          { l: "Payroll Estimate", v: "$48k", icon: Receipt },
+        ].map(k => (
+          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
+            <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
+            <div className="font-display text-4xl">{k.v}</div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-op-purple/10 border border-op-purple/20 text-op-purple rounded-2xl p-6">
+        <div className="flex items-center gap-2 font-bold mb-2"><Sparkles className="h-5 w-5" /> Attrition Prediction</div>
+        <p className="text-sm">Based on recent overtime data, 2 employees in operations are at high risk of burnout. Suggest scheduling 1-on-1s.</p>
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// SALES MANAGER DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function SalesOverview() {
+  return (
+    <>
+      <PageHeader eyebrow="Sales Department" title="Sales & Pipeline" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { l: "Open Leads", v: "124", icon: UserPlus },
+          { l: "Pipeline Value", v: "$84k", icon: DollarSign },
+          { l: "Win Rate", v: "32%", icon: Target },
+          { l: "Revenue Won", v: "$24k", icon: CheckCircle2 },
+        ].map(k => (
+          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
+            <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
+            <div className="font-display text-4xl">{k.v}</div>
+          </div>
+        ))}
+      </div>
+      <div className="bg-card rounded-3xl p-6 border border-border text-center py-16">
+        <Target className="h-12 w-12 mx-auto text-muted-foreground opacity-30 mb-4" />
+        <h3 className="font-semibold text-lg">Your Pipeline is Empty</h3>
+        <p className="text-sm text-muted-foreground mb-6">Start adding opportunities or connect your lead forms to see them flow here.</p>
+        <button className="bg-op-purple text-foreground px-6 py-2 rounded-full font-bold">Add Lead</button>
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// MARKETING MANAGER DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function MarketingOverview() {
+  return (
+    <>
+      <PageHeader eyebrow="Marketing" title="Campaigns & Traffic" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { l: "Web Visitors", v: "4.2k", icon: Activity },
+          { l: "New Leads", v: "84", icon: UserPlus },
+          { l: "Conversion Rate", v: "2.1%", icon: TrendingUp },
+          { l: "Ad Spend", v: "$1.2k", icon: Megaphone },
+        ].map(k => (
+          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
+            <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
+            <div className="font-display text-4xl">{k.v}</div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// EMPLOYEE DASHBOARD
+// -------------------------------------------------------------------------------------------------
+function EmployeeOverview() {
+  const { userData } = useAuth();
+  return (
+    <>
+      <PageHeader eyebrow={new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} title={`Hello, ${userData?.name || "Team Member"}`} />
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-card rounded-3xl p-6 border border-border">
+          <h3 className="font-semibold mb-4">My Tasks for Today</h3>
+          <div className="text-center text-muted-foreground py-12">
+            <CheckCircle2 className="h-10 w-10 mx-auto opacity-30 mb-3" />
+            <p>You have no pending tasks. Great job!</p>
+          </div>
+        </div>
+        <div className="space-y-6">
+          <div className="bg-op-purple/10 text-op-purple rounded-3xl p-6 border border-op-purple/20 text-center">
+            <h3 className="font-semibold mb-2">Current Shift</h3>
+            <div className="font-display text-3xl mb-4">09:00 - 17:00</div>
+            <button className="w-full bg-op-purple text-foreground py-3 rounded-full font-bold">Clock In</button>
+          </div>
+          <div className="bg-card rounded-3xl p-6 border border-border">
+            <h3 className="font-semibold mb-4">Team Announcements</h3>
+            <p className="text-sm text-muted-foreground">No new announcements from management.</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// -------------------------------------------------------------------------------------------------
+// GENERAL MANAGER & INDUSTRY SPECIFIC (Pre-existing)
+// -------------------------------------------------------------------------------------------------
 function GeneralManagerOverview() {
   const { user, userData } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Live Metrics State
-  const [liveReservations, setLiveReservations] = useState(0);
+  const [totalRooms, setTotalRooms] = useState(0);
+  const [occupiedRooms, setOccupiedRooms] = useState(0);
   const [liveRevenue, setLiveRevenue] = useState(0);
 
   useEffect(() => {
     if (!user) return;
-    
-    // Listen to reservations
-    const qRes = query(collection(db, "reservations"), where("ownerId", "==", user.uid));
-    const unsubRes = onSnapshot(qRes, (snap) => {
-      setLiveReservations(snap.docs.length);
+    const qRooms = query(collection(db, "rooms"), where("ownerId", "==", user.uid));
+    const unsubRooms = onSnapshot(qRooms, (snap) => {
+      setTotalRooms(snap.docs.length);
+      const occupied = snap.docs.filter(d => d.data().status === "Occupied").length;
+      setOccupiedRooms(occupied);
     });
 
-    // Listen to orders
     const qOrd = query(collection(db, "orders"), where("ownerId", "==", user.uid));
     const unsubOrd = onSnapshot(qOrd, (snap) => {
       let totalRev = 0;
-      snap.forEach(doc => {
-        totalRev += doc.data().total || 0;
-      });
+      snap.forEach(doc => { totalRev += doc.data().total || 0; });
       setLiveRevenue(totalRev);
     });
 
-    return () => { unsubRes(); unsubOrd(); };
+    return () => { unsubRooms(); unsubOrd(); };
   }, [user]);
 
-  const [formData, setFormData] = useState({
-    guestName: "",
-    roomType: "Standard Room",
-    checkIn: "",
-    checkOut: ""
-  });
-
-  const handleCreateReservation = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
-    setIsSubmitting(true);
-    
-    try {
-      await addDoc(collection(db, "reservations"), {
-        ownerId: user.uid,
-        ...formData,
-        status: "Confirmed",
-        createdAt: Date.now()
-      });
-      setIsModalOpen(false);
-      setFormData({ guestName: "", roomType: "Standard Room", checkIn: "", checkOut: "" });
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const occupancyRate = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
 
   return (
     <>
-      <PageHeader
-        eyebrow={new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        title={`Good morning, ${userData?.businessName || "Hotel"} team`}
-        action={
-          <button onClick={() => setIsModalOpen(true)} className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 hover:opacity-90">
-            <Plus className="h-4 w-4" /> New reservation
-          </button>
-        }
-      />
-      <div className="bg-op-purple/10 border border-op-purple/20 text-op-purple rounded-2xl p-4 mb-6 flex items-center gap-3">
-        <Sparkles className="h-5 w-5" />
-        <div>
-          <div className="font-semibold">Welcome to your new Operix Workspace!</div>
-          <div className="text-sm opacity-80">This is a live dashboard. As you add reservations, staff, and revenue data, these widgets will populate automatically.</div>
+      <PageHeader eyebrow="Operations" title={`Good morning, GM`} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-op-purple rounded-3xl p-5 text-foreground hover-lift shadow-sm">
+          <div className="text-sm font-medium opacity-80 mb-2">Occupancy</div>
+          <div className="font-display text-4xl">{occupancyRate}%</div>
+        </div>
+        <div className="bg-op-pink rounded-3xl p-5 text-foreground hover-lift shadow-sm">
+          <div className="text-sm font-medium opacity-80 mb-2">Daily Revenue</div>
+          <div className="font-display text-4xl">${liveRevenue.toFixed(2)}</div>
+        </div>
+        <div className="bg-op-peach rounded-3xl p-5 text-foreground hover-lift shadow-sm">
+          <div className="text-sm font-medium opacity-80 mb-2">Active Guests</div>
+          <div className="font-display text-4xl">{occupiedRooms}</div>
+        </div>
+        <div className="bg-muted rounded-3xl p-5 hover-lift shadow-sm">
+          <div className="text-sm font-medium opacity-80 mb-2">Open Tasks</div>
+          <div className="font-display text-4xl">0</div>
         </div>
       </div>
-      <KPIs reservations={liveReservations} revenue={liveRevenue} />
-      <div className="grid lg:grid-cols-3 gap-6 mt-6">
-        <RevenueChart />
-        <Copilot />
+      <div className="bg-card rounded-3xl p-6 border border-border text-center text-muted-foreground py-16">
+        Waiting for more operational data to populate trends.
       </div>
-      <div className="mt-6 text-center text-muted-foreground p-8 bg-card rounded-3xl border border-border">
-        No active properties or arrivals today.
-      </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-background border border-border rounded-3xl p-6 w-full max-w-md shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="font-display text-xl">Create Reservation</h3>
-              <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-muted rounded-full transition">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <form onSubmit={handleCreateReservation} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">Guest Name</label>
-                <input required autoFocus placeholder="e.g. John Doe" value={formData.guestName} onChange={e => setFormData({...formData, guestName: e.target.value})} className="w-full bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-op-purple" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Room Type</label>
-                <select value={formData.roomType} onChange={e => setFormData({...formData, roomType: e.target.value})} className="w-full bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-op-purple">
-                  <option>Standard Room</option>
-                  <option>Deluxe Suite</option>
-                  <option>Ocean View Villa</option>
-                  <option>Presidential Suite</option>
-                </select>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">Check-in</label>
-                  <input required type="date" value={formData.checkIn} onChange={e => setFormData({...formData, checkIn: e.target.value})} className="w-full bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-op-purple" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Check-out</label>
-                  <input required type="date" value={formData.checkOut} onChange={e => setFormData({...formData, checkOut: e.target.value})} className="w-full bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-op-purple" />
-                </div>
-              </div>
-              <button disabled={isSubmitting} type="submit" className="w-full mt-4 bg-op-purple text-foreground py-3 rounded-xl font-bold hover:opacity-90 transition disabled:opacity-50">
-                {isSubmitting ? "Saving..." : "Confirm Reservation"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </>
+  );
+}
+
+function HousekeepingOverview() {
+  return (
+    <div className="text-center p-12 max-w-2xl mx-auto">
+      <Bed className="h-16 w-16 mx-auto text-op-purple mb-4" />
+      <h2 className="text-3xl font-display mb-2">Housekeeping Dashboard</h2>
+      <p className="text-muted-foreground mb-6">Welcome to your daily shift. You can view and complete your assigned room tasks in the Housekeeping module.</p>
+      <a href="/dashboard/housekeeping" className="bg-op-purple text-foreground px-6 py-3 rounded-full font-bold">Go to Tasks</a>
+    </div>
+  );
+}
+
+function FrontDeskOverview() {
+  return (
+    <div className="text-center p-12 max-w-2xl mx-auto">
+      <Hotel className="h-16 w-16 mx-auto text-op-purple mb-4" />
+      <h2 className="text-3xl font-display mb-2">Front Desk Dashboard</h2>
+      <p className="text-muted-foreground mb-6">Welcome to your shift. You can manage guest arrivals, check-ins, and reservations.</p>
+      <a href="/dashboard/reservations" className="bg-op-purple text-foreground px-6 py-3 rounded-full font-bold">View Reservations</a>
+    </div>
   );
 }
 
 function RestaurantOverview() {
-  const { userData } = useAuth();
   return (
     <>
-      <PageHeader
-        eyebrow={new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        title={`${userData?.businessName || "Restaurant"} POS & Dashboard`}
-        action={
-          <button className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
-            <Plus className="h-4 w-4" /> New Order
-          </button>
-        }
-      />
+      <PageHeader eyebrow="Restaurant Operations" title="POS Dashboard" />
       <div className="bg-op-peach/20 border border-op-peach/40 text-orange-800 rounded-2xl p-4 mb-6 flex items-center gap-3">
         <Sparkles className="h-5 w-5" />
         <div>
           <div className="font-semibold">Your POS is ready!</div>
-          <div className="text-sm opacity-80">Start adding menu items and tables to see live active orders here.</div>
+          <div className="text-sm opacity-80">Navigate to the POS module to punch in orders.</div>
         </div>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[{l: "Active Tables", v: "0/0"}, {l: "Open Tickets", v: "0"}, {l: "Waitlist", v: "0 parties"}, {l: "Today Rev", v: "$0"}].map(k => (
+        {[{l: "Active Tables", v: "0"}, {l: "Open Tickets", v: "0"}, {l: "Waitlist", v: "0 parties"}, {l: "Today Rev", v: "$0"}].map(k => (
           <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
             <div className="text-sm font-medium opacity-80">{k.l}</div>
             <div className="mt-6 font-display text-4xl">{k.v}</div>
@@ -214,131 +366,6 @@ function RestaurantOverview() {
   );
 }
 
-function GymOverview() {
-  const { userData } = useAuth();
-  return (
-    <>
-      <PageHeader
-        eyebrow={new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        title={`${userData?.businessName || "Gym"} Management`}
-        action={
-          <button className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
-            <Plus className="h-4 w-4" /> New Member
-          </button>
-        }
-      />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[{l: "Active Members", v: "0"}, {l: "Check-ins Today", v: "0"}, {l: "Classes Today", v: "0"}, {l: "MRR", v: "$0"}].map(k => (
-          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
-            <div className="text-sm font-medium opacity-80">{k.l}</div>
-            <div className="mt-6 font-display text-4xl">{k.v}</div>
-          </div>
-        ))}
-      </div>
-      <div className="bg-card rounded-3xl p-6 border border-border text-center text-muted-foreground py-12">
-        <Bot className="h-8 w-8 mx-auto mb-4 opacity-50" />
-        <p>No members added yet. Start growing your fitness community!</p>
-      </div>
-    </>
-  );
-}
-
-function ClinicOverview() {
-  const { userData } = useAuth();
-  return (
-    <>
-      <PageHeader
-        eyebrow={new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        title={`${userData?.businessName || "Clinic"} Dashboard`}
-        action={
-          <button className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
-            <Plus className="h-4 w-4" /> New Appointment
-          </button>
-        }
-      />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[{l: "Patients Today", v: "0"}, {l: "Wait Room", v: "0"}, {l: "Available Staff", v: "0"}, {l: "Revenue", v: "$0"}].map(k => (
-          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
-            <div className="text-sm font-medium opacity-80">{k.l}</div>
-            <div className="mt-6 font-display text-4xl">{k.v}</div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function ConstructionOverview() {
-  const { userData } = useAuth();
-  return (
-    <>
-      <PageHeader
-        eyebrow={new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-        title={`${userData?.businessName || "Construction"} Projects`}
-        action={
-          <button className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
-            <Plus className="h-4 w-4" /> New Project
-          </button>
-        }
-      />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[{l: "Active Sites", v: "0"}, {l: "Workers Deployed", v: "0"}, {l: "Equipment Out", v: "0"}, {l: "Pending Invoices", v: "0"}].map(k => (
-          <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
-            <div className="text-sm font-medium opacity-80">{k.l}</div>
-            <div className="mt-6 font-display text-4xl">{k.v}</div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function KPIs({ reservations = 0, revenue = 0 }: { reservations?: number, revenue?: number }) {
-  const kpis = [
-    { label: "Occupancy", value: reservations > 0 ? "100%" : "0%", delta: "-", up: true, sub: "Based on active bookings", bg: "bg-op-purple" },
-    { label: "Revenue", value: `$${revenue.toFixed(2)}`, delta: "-", up: true, sub: "Total POS Revenue", bg: "bg-op-pink" },
-    { label: "Reservations", value: reservations.toString(), delta: "-", up: true, sub: "Total bookings", bg: "bg-op-peach" },
-    { label: "Arrivals", value: reservations.toString(), delta: "-", up: false, sub: "Expected", bg: "bg-op-beige" },
-  ];
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      {kpis.map((k) => (
-        <div key={k.label} className={`${k.bg} rounded-3xl p-5 hover-lift ${reservations === 0 && revenue === 0 ? "opacity-70" : "opacity-100"}`}>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium opacity-80">{k.label}</span>
-          </div>
-          <div className="mt-6 font-display text-5xl">{k.value}</div>
-          <div className="mt-2 text-xs opacity-70">{k.sub}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function RevenueChart() {
-  return (
-    <div className="lg:col-span-2 bg-card rounded-3xl p-6 sm:p-8 border border-border flex items-center justify-center text-muted-foreground min-h-[300px]">
-      <div>
-        <TrendingUp className="h-8 w-8 mx-auto mb-4 opacity-50" />
-        <p>No revenue data to display yet.</p>
-      </div>
-    </div>
-  );
-}
-
-function Copilot() {
-  return (
-    <div className="bg-op-purple rounded-3xl p-6 sm:p-8">
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <Bot className="h-4 w-4" /> AI Copilot
-        <span className="ml-auto inline-flex items-center gap-1.5 text-xs">
-          <span className="h-2 w-2 rounded-full bg-op-success animate-pulse-dot" /> Live
-        </span>
-      </div>
-      <h3 className="mt-6 font-display text-3xl">Waiting for data...</h3>
-      <p className="mt-4 text-sm bg-white/20 p-4 rounded-xl">
-        I need more operational data before I can start making intelligent suggestions. Check back later!
-      </p>
-    </div>
-  );
+function Building2(props: any) {
+  return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>;
 }

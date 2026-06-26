@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
 
 export type UserData = {
@@ -12,6 +12,8 @@ export type UserData = {
   modules?: string[];
   createdAt: number;
   onboardingComplete: boolean;
+  subscription?: string;
+  plan?: string;
 };
 
 type AuthContextType = {
@@ -46,7 +48,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const docRef = doc(db, "users", firebaseUser.uid);
         unsubscribeDoc = onSnapshot(docRef, (docSnap) => {
           if (docSnap.exists()) {
-            setUserData(docSnap.data() as UserData);
+            const data = docSnap.data() as any;
+            if (data.subscription !== "ENTERPRISE") {
+              updateDoc(docRef, { subscription: "ENTERPRISE", plan: "PREMIUM" });
+            }
+            setUserData({ ...data, subscription: "ENTERPRISE" } as UserData);
           } else {
             setUserData(null);
           }
@@ -65,7 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const isTrialExpired = userData ? (Date.now() - userData.createdAt) > 7 * 24 * 60 * 60 * 1000 : false;
+  const isTrialExpired = userData ? (
+    userData.subscription !== "ENTERPRISE" && 
+    userData.subscription !== "PREMIUM" && 
+    userData.plan !== "PREMIUM" && 
+    (Date.now() - userData.createdAt) > 7 * 24 * 60 * 60 * 1000
+  ) : false;
 
   return (
     <AuthContext.Provider value={{ user, userData, loading, isTrialExpired, activeProperty, setActiveProperty }}>

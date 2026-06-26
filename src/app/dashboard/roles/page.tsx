@@ -1,106 +1,181 @@
 "use client";
 
-import { useState } from "react";
-import { PageHeader, Card } from "@/components/dashboard-shell";
-import { Check } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { db } from "@/lib/firebase";
+import { collection, onSnapshot, query, where, doc, setDoc, deleteDoc } from "firebase/firestore";
+import { Plus, Trash2, Shield, X, Edit2 } from "lucide-react";
+import { PageHeader } from "@/components/dashboard-shell";
 
+export default function RolesPage() {
+  const { user, userData, activeProperty } = useAuth();
+  const [dataList, setDataList] = useState<any[]>([]);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const initialForm = {
+    roleName: "",
+    description: "",
+    accessLevel: ""
+  };
+  
+  const [formData, setFormData] = useState<any>(initialForm);
 
+  useEffect(() => {
+    if (!user) return;
+    let q = query(collection(db, "roles"), where("ownerId", "==", user.uid));
+    if (activeProperty) {
+      q = query(collection(db, "roles"), where("ownerId", "==", user.uid), where("propertyId", "==", activeProperty));
+    }
+    const unsub = onSnapshot(q, (snap) => {
+      setDataList(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    });
+    return unsub;
+  }, [user, activeProperty]);
 
-const ROLES = [
-  {
-    name: "Super Admin",
-    desc: "Platform owner. Full access across every property, billing, AI usage and analytics.",
-    perms: ["All properties", "Subscriptions", "AI quotas", "Billing", "Audit logs"],
-  },
-  {
-    name: "Hotel Owner",
-    desc: "Top-line view across owned properties.",
-    perms: ["Revenue", "Reports", "Staff", "Finance"],
-  },
-  {
-    name: "General Manager",
-    desc: "Day-to-day operations for one property.",
-    perms: ["Occupancy", "Complaints", "Staff performance", "All ops modules"],
-  },
-  {
-    name: "Front Desk Manager",
-    desc: "Check-in / out, room allocation, guest requests.",
-    perms: ["Reservations", "Front desk", "Room assignment"],
-  },
-  {
-    name: "Housekeeping Manager",
-    desc: "Cleaning schedules, room status and laundry.",
-    perms: ["Housekeeping", "Inventory (linen)"],
-  },
-  {
-    name: "Maintenance Manager",
-    desc: "Asset management, work orders, predictive maintenance.",
-    perms: ["Maintenance", "Assets", "Vendors"],
-  },
-  {
-    name: "Restaurant Manager",
-    desc: "POS, kitchen, F&B inventory and menu.",
-    perms: ["POS", "F&B inventory", "Menu"],
-  },
-  {
-    name: "Finance Manager",
-    desc: "Accounting, payroll and taxes.",
-    perms: ["Finance", "Payroll", "Documents"],
-  },
-  {
-    name: "HR Manager",
-    desc: "Workforce records, attendance, recruitment.",
-    perms: ["Staff", "Attendance", "Recruitment"],
-  },
-  {
-    name: "Employee",
-    desc: "Limited department-scoped access.",
-    perms: ["Tasks", "Inbox"],
-  },
-];
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) return;
+    setIsSubmitting(true);
+    
+    try {
+      const docId = formData.id || crypto.randomUUID();
+      await setDoc(doc(db, "roles", docId), {
+        ...formData,
+        id: docId,
+        ownerId: user.uid,
+        propertyId: activeProperty || null,
+        updatedAt: Date.now(),
+        createdAt: formData.createdAt || Date.now()
+      });
 
-function Page() {
-  const [active, setActive] = useState(ROLES[2].name);
-  const role = ROLES.find((r) => r.name === active)!;
+      setIsAdding(false);
+      setFormData(initialForm);
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this entry?")) {
+      await deleteDoc(doc(db, "roles", id));
+    }
+  };
+
+  const handleEdit = (item: any) => {
+    setFormData(item);
+    setIsAdding(true);
+  };
+
   return (
     <>
-      <PageHeader eyebrow="RBAC" title="Roles & Access" />
-      <div className="grid lg:grid-cols-[280px_1fr] gap-6">
-        <Card className="p-2">
-          <div className="space-y-0.5">
-            {ROLES.map((r) => (
-              <button
-                key={r.name}
-                onClick={() => setActive(r.name)}
-                className={`w-full text-left text-sm rounded-xl px-3 py-2.5 ${
-                  r.name === active ? "bg-foreground text-background" : "hover:bg-muted"
-                }`}
-              >
-                {r.name}
+      <PageHeader 
+        eyebrow="Module" 
+        title="Roles & Permissions" 
+        action={
+          <button onClick={() => { setFormData(initialForm); setIsAdding(true); }} className="bg-foreground text-background rounded-full px-5 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
+            <Plus className="h-4 w-4" /> Add Entry
+          </button>
+        } 
+      />
+
+      {isAdding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-background border border-border rounded-3xl p-6 w-full max-w-2xl shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-display text-xl">{formData.id ? 'Edit' : 'New'} Roles & Permissions Entry</h3>
+              <button onClick={() => setIsAdding(false)} className="p-2 hover:bg-muted rounded-full transition">
+                <X className="h-5 w-5" />
               </button>
-            ))}
+            </div>
+            
+            <form onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Role Name</label>
+                <input 
+                  required={true} 
+                  type="text" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.roleName || ''} 
+                  onChange={e => setFormData({...formData, roleName: e.target.value})} 
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Description</label>
+                <input 
+                  required={true} 
+                  type="text" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.description || ''} 
+                  onChange={e => setFormData({...formData, description: e.target.value})} 
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Access Level (1-10)</label>
+                <input 
+                  required={true} 
+                  type="number" 
+                  className="bg-muted border border-border rounded-xl px-4 py-3 outline-none" 
+                  value={formData.accessLevel || ''} 
+                  onChange={e => setFormData({...formData, accessLevel: Number(e.target.value)})} 
+                />
+              </div>
+              <div className="sm:col-span-2 flex justify-end gap-2 mt-4">
+                <button type="button" onClick={() => setIsAdding(false)} className="px-6 py-3 rounded-xl font-semibold hover:bg-muted transition">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="bg-op-purple text-foreground px-8 py-3 rounded-xl font-bold transition hover:opacity-90 disabled:opacity-50">
+                  {isSubmitting ? "Saving..." : "Save Entry"}
+                </button>
+              </div>
+            </form>
           </div>
-        </Card>
-        <div className="space-y-6">
-          <Card>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground">Role</div>
-            <div className="font-display text-3xl mt-1">{role.name}</div>
-            <p className="mt-3 text-foreground/70">{role.desc}</p>
-          </Card>
-          <Card>
-            <div className="text-xs uppercase tracking-widest text-muted-foreground mb-3">Permissions</div>
-            <ul className="grid sm:grid-cols-2 gap-2">
-              {role.perms.map((p) => (
-                <li key={p} className="flex items-center gap-2 text-sm bg-muted rounded-xl px-3 py-2.5">
-                  <Check className="h-4 w-4 text-op-purple" /> {p}
-                </li>
-              ))}
-            </ul>
-          </Card>
+        </div>
+      )}
+
+      <div className="bg-card rounded-3xl border border-border overflow-hidden shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-muted/50 border-b border-border">
+              <tr>
+                <th className="p-4 font-semibold text-muted-foreground">Role Name</th>
+                <th className="p-4 font-semibold text-muted-foreground">Description</th>
+                <th className="p-4 font-semibold text-muted-foreground">Access Level (1-10)</th>
+                <th className="p-4 font-semibold text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataList.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-8 text-center text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <Shield className="h-8 w-8 text-muted-foreground/50" />
+                      No data found. Create your first entry!
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                dataList.map(item => (
+                  <tr key={item.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                    <td className="p-4">{item.roleName}</td>
+                    <td className="p-4">{item.description}</td>
+                    <td className="p-4">{item.accessLevel}</td>
+                    <td className="p-4 flex gap-2">
+                      <button onClick={() => handleEdit(item)} className="text-blue-500 hover:bg-blue-500/10 p-2 rounded-full transition">
+                        <Edit2 className="h-4 w-4" />
+                      </button>
+                      <button onClick={() => handleDelete(item.id)} className="text-rose-500 hover:bg-rose-500/10 p-2 rounded-full transition">
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </>
   );
 }
-
-export default Page;

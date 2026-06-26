@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
-import { ChefHat, Building2, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
-  LayoutDashboard, Calendar, Bed, Users, BarChart3, MessageCircle, Settings, Search, Bell,
+  ChefHat, Building2, LayoutDashboard, Calendar, Bed, Users, BarChart3, MessageCircle, Settings, Search, Bell,
   Sparkles, Hotel, Wrench, Boxes, ShoppingBag, UtensilsCrossed, Heart, Bot, PartyPopper,
   Receipt, Wallet, ClipboardList, ShieldCheck, FileText, UserCog, Menu, X, ChevronDown, Globe2,
   Briefcase, BookOpen, Send, Plus, Lock
@@ -10,11 +10,11 @@ import {
 import { useState, createContext, useContext, useEffect, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { db } from "@/lib/firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, doc, updateDoc } from "firebase/firestore";
 
 export const RoleContext = createContext<{ role: string; setRole: (r: string) => void }>({
   role: "General Manager",
-  setRole: () => {},
+  setRole: () => { },
 });
 
 type Item = { icon: any; label: string; to: string };
@@ -90,19 +90,19 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 
   const filteredGroups = GROUPS.map(g => {
     let items = g.items;
-    
+
     // If they have selected specific modules from onboarding
     if (userData?.modules?.length) {
       if (g.title === "Operate") {
-         items = items.filter(i => i.label === "Overview" || userData.modules!.includes("booking") || userData.modules!.includes("pos"));
+        items = items.filter(i => i.label === "Overview" || userData.modules!.includes("booking") || userData.modules!.includes("pos"));
       } else if (g.title === "Revenue & Sales") {
-         items = items.filter(i => userData.modules!.includes("pos") || userData.modules!.includes("inventory"));
+        items = items.filter(i => userData.modules!.includes("pos") || userData.modules!.includes("inventory"));
       } else if (g.title === "Guests") {
-         items = items.filter(i => userData.modules!.includes("crm"));
+        items = items.filter(i => userData.modules!.includes("crm"));
       } else if (g.title === "Workforce") {
-         items = items.filter(i => userData.modules!.includes("hr"));
+        items = items.filter(i => userData.modules!.includes("hr"));
       } else if (g.title === "Finance & Intel") {
-         items = items.filter(i => i.label === "Analytics" || userData.modules!.includes("website") || userData.modules!.includes("pos"));
+        items = items.filter(i => i.label === "Analytics" || userData.modules!.includes("website") || userData.modules!.includes("pos"));
       }
     }
 
@@ -132,9 +132,8 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
                   key={i.label}
                   href={i.to}
                   onClick={onNavigate}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition ${
-                    active ? "bg-op-purple text-foreground" : "text-background/70 hover:bg-white/5"
-                  }`}
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition ${active ? "bg-op-purple text-foreground" : "text-background/70 hover:bg-white/5"
+                    }`}
                 >
                   <i.icon className="h-4 w-4 shrink-0" />
                   <span className="truncate">{i.label}</span>
@@ -188,9 +187,8 @@ function PropertySwitcher() {
             <button
               key={p.id}
               onClick={() => { setActiveProperty(p.id); setOpen(false); }}
-              className={`w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-white/10 ${
-                p.id === activeProperty ? "text-op-purple font-bold" : "text-background/80"
-              }`}
+              className={`w-full text-left px-3 py-2 text-xs rounded-lg hover:bg-white/10 ${p.id === activeProperty ? "text-op-purple font-bold" : "text-background/80"
+                }`}
             >
               {p.name}
             </button>
@@ -213,7 +211,7 @@ function SidebarInner() {
       </div>
       <div className="shrink-0 pt-3 space-y-3">
         <PropertySwitcher />
-<div className="bg-white/5 rounded-2xl p-4">
+        <div className="bg-white/5 rounded-2xl p-4">
           <div className="flex items-center gap-2 text-xs text-op-purple mb-2">
             <Sparkles className="h-3.5 w-3.5" /> AI Copilot
           </div>
@@ -244,8 +242,8 @@ function Topbar({ onMenu, setCmdOpen }: { onMenu: () => void, setCmdOpen: (o: bo
       <div className="flex-1 min-w-0 max-w-xl relative cursor-text" onClick={() => setCmdOpen(true)}>
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <div className="w-full bg-muted rounded-full pl-10 pr-4 py-2.5 text-sm text-muted-foreground flex justify-between items-center transition hover:bg-muted/80">
-           <span>Search…</span>
-           <kbd className="hidden sm:inline-block bg-background/50 px-2 py-0.5 rounded text-[10px] font-semibold border border-border">CMD K</kbd>
+          <span>Search…</span>
+          <kbd className="hidden sm:inline-block bg-background/50 px-2 py-0.5 rounded text-[10px] font-semibold border border-border">CMD K</kbd>
         </div>
       </div>
       <button className="p-2.5 rounded-full hover:bg-muted relative shrink-0 ml-2">
@@ -262,7 +260,7 @@ function Topbar({ onMenu, setCmdOpen }: { onMenu: () => void, setCmdOpen: (o: bo
 export function DashboardShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
-  
+
   const { isTrialExpired, user, loading } = useAuth();
   const router = useRouter();
 
@@ -275,46 +273,64 @@ export function DashboardShell({ children }: { children: ReactNode }) {
   if (loading) return <div className="min-h-screen bg-muted/40" />;
 
   return (
-    
-      <div className="min-h-screen bg-muted/40 text-foreground flex relative">
-        {isTrialExpired && (
-          <div className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-foreground text-background max-w-md w-full rounded-3xl p-8 shadow-2xl text-center">
-              <div className="mx-auto h-12 w-12 bg-op-purple rounded-full flex items-center justify-center mb-6">
-                <Lock className="h-6 w-6" />
+
+    <div className="min-h-screen bg-muted/40 text-foreground flex relative">
+      {isTrialExpired && (
+          <div className="fixed inset-0 z-[200] bg-black/85 backdrop-blur-xl flex items-center justify-center p-4 animate-in fade-in duration-300">
+            <div className="relative bg-gradient-to-b from-zinc-900 via-zinc-950 to-black text-white max-w-lg w-full rounded-3xl p-8 sm:p-10 border border-white/10 shadow-[0_0_100px_-20px_rgba(168,85,247,0.4)] overflow-hidden text-center">
+              <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-op-purple/30 rounded-full blur-3xl pointer-events-none" />
+              
+              <div className="relative z-10">
+                <div className="mx-auto h-16 w-16 bg-gradient-to-tr from-op-purple to-op-pink rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-op-purple/30 ring-1 ring-white/20">
+                  <Lock className="h-8 w-8 text-white animate-pulse" />
+                </div>
+
+                <div className="text-[10px] uppercase font-mono tracking-widest text-op-purple font-bold mb-2">Orvyn HotelOS Enterprise</div>
+                <h2 className="text-3xl sm:text-4xl font-display tracking-tight bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent mb-3">
+                  Your 7-Day Trial Concluded
+                </h2>
+                <p className="text-sm text-zinc-400 mb-8 leading-relaxed max-w-sm mx-auto">
+                  You have experienced the full power of Orvyn&apos;s deep hotel and restaurant sync. Upgrade to unlock continuous live cloud operations.
+                </p>
+
+                <div className="bg-white/5 border border-white/5 rounded-2xl p-4 mb-8 text-left space-y-2.5 text-xs text-zinc-300 font-medium">
+                  <div className="flex items-center gap-2.5"><Sparkles className="h-4 w-4 text-op-purple shrink-0"/> Unlimited Front Desk & Room Grids</div>
+                  <div className="flex items-center gap-2.5"><Sparkles className="h-4 w-4 text-op-pink shrink-0"/> Real-time Kitchen Display System (KDS) Sync</div>
+                  <div className="flex items-center gap-2.5"><Sparkles className="h-4 w-4 text-op-peach shrink-0"/> Automated Inventory Deduction Engine</div>
+                </div>
+
+                <div className="space-y-3">
+                  <Link href="/pricing" className="block w-full bg-gradient-to-r from-op-purple via-purple-600 to-op-pink text-white rounded-2xl py-4 text-sm font-bold hover:opacity-95 transition-all shadow-[0_0_40px_-10px_rgba(168,85,247,0.6)] hover:scale-[1.02]">
+                    Explore Enterprise Plans &rarr;
+                  </Link>
+                  
+                </div>
               </div>
-              <h2 className="text-3xl font-display mb-2">Trial Expired</h2>
-              <p className="text-background/70 mb-8">
-                Your 7-day free trial has ended. Please upgrade your plan to continue using Operix and access your data.
-              </p>
-              <Link href="/pricing" className="block w-full bg-op-purple text-foreground rounded-full py-4 font-semibold hover:scale-105 transition-transform shadow-[0_0_30px_-5px_rgba(126,34,206,0.5)]">
-                Upgrade to Premium
-              </Link>
             </div>
           </div>
         )}
-        <Sidebar />
-        {open && (
-          <div className="fixed inset-0 z-[70] lg:hidden">
-            <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
-            <div className="absolute top-0 left-0 h-full w-[84%] max-w-xs bg-foreground text-background p-4 flex flex-col">
-              <button onClick={() => setOpen(false)} aria-label="Close menu" className="self-end p-2 rounded-full hover:bg-white/10">
-                <X className="h-5 w-5" />
-              </button>
-              <div className="flex-1 min-h-0">
-                <SidebarInner />
-              </div>
+      <Sidebar />
+      {open && (
+        <div className="fixed inset-0 z-[70] lg:hidden">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
+          <div className="absolute top-0 left-0 h-full w-[84%] max-w-xs bg-foreground text-background p-4 flex flex-col">
+            <button onClick={() => setOpen(false)} aria-label="Close menu" className="self-end p-2 rounded-full hover:bg-white/10">
+              <X className="h-5 w-5" />
+            </button>
+            <div className="flex-1 min-h-0">
+              <SidebarInner />
             </div>
           </div>
-        )}
-        <div className="flex-1 min-w-0">
-          <Topbar onMenu={() => setOpen(true)} setCmdOpen={setCmdOpen} />
-          <main className="p-4 sm:p-8 space-y-6">{children}</main>
         </div>
-        <AIChatWidget />
-        <CommandPalette open={cmdOpen} setOpen={setCmdOpen} />
+      )}
+      <div className="flex-1 min-w-0">
+        <Topbar onMenu={() => setOpen(true)} setCmdOpen={setCmdOpen} />
+        <main className="p-4 sm:p-8 space-y-6">{children}</main>
       </div>
-    
+      <AIChatWidget />
+      <CommandPalette open={cmdOpen} setOpen={setCmdOpen} />
+    </div>
+
   );
 }
 
@@ -338,9 +354,9 @@ function CommandPalette({ open, setOpen }: { open: boolean, setOpen: (o: boolean
       <div className="relative w-[90%] max-w-2xl bg-foreground text-background rounded-2xl shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden scale-100 transition-transform origin-top animate-in zoom-in-95 duration-200">
         <div className="flex items-center px-4 py-4 border-b border-white/10">
           <Search className="h-5 w-5 text-muted-foreground mr-3" />
-          <input 
+          <input
             autoFocus
-            placeholder="Search commands, modules, or ask Copilot..." 
+            placeholder="Search commands, modules, or ask Copilot..."
             className="flex-1 bg-transparent border-none outline-none text-lg text-background placeholder:text-background/40"
           />
           <kbd className="hidden sm:inline-flex px-2 py-1 bg-white/10 rounded text-xs text-background/60">ESC</kbd>
@@ -366,20 +382,20 @@ function CommandPalette({ open, setOpen }: { open: boolean, setOpen: (o: boolean
 
 function AIChatWidget() {
   const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState<{user: boolean, text: string}[]>([
+  const [msgs, setMsgs] = useState<{ user: boolean, text: string }[]>([
     { user: false, text: "Hi Regina! I've noticed a 12% drop in weekend bookings. Want me to generate a new pricing strategy?" }
   ]);
   const [input, setInput] = useState("");
 
   return (
     <>
-      <button 
+      <button
         onClick={() => setOpen(!open)}
         className="fixed bottom-6 right-6 h-14 w-14 bg-op-purple text-foreground rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-50 group"
       >
         {open ? <X className="h-6 w-6" /> : <Sparkles className="h-6 w-6 group-hover:rotate-12 transition-transform" />}
       </button>
-      
+
       {open && (
         <div className="fixed bottom-24 right-6 w-80 sm:w-96 bg-foreground text-background rounded-3xl shadow-2xl overflow-hidden z-50 border border-white/10 flex flex-col h-[500px] max-h-[80vh] animate-in slide-in-from-bottom-4 duration-300">
           <div className="p-4 bg-white/5 border-b border-white/10 flex items-center gap-3">
@@ -393,7 +409,7 @@ function AIChatWidget() {
               </div>
             </div>
           </div>
-          
+
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {msgs.map((m, i) => (
               <div key={i} className={`flex ${m.user ? "justify-end" : "justify-start"}`}>
@@ -404,16 +420,16 @@ function AIChatWidget() {
             ))}
           </div>
 
-          <form 
+          <form
             onSubmit={e => {
               e.preventDefault();
               if (!input) return;
-              setMsgs(p => [...p, {user: true, text: input}]);
+              setMsgs(p => [...p, { user: true, text: input }]);
               setInput("");
               setTimeout(() => {
-                setMsgs(p => [...p, {user: false, text: "I'll analyze that right away. Generating a detailed report for you now..."}]);
+                setMsgs(p => [...p, { user: false, text: "I'll analyze that right away. Generating a detailed report for you now..." }]);
               }, 1000);
-            }} 
+            }}
             className="p-3 border-t border-white/10"
           >
             <div className="relative">

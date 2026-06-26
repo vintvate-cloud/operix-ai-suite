@@ -1,7 +1,7 @@
 {
+  "/page": "app/page.js",
   "/sign-in/page": "app/sign-in/page.js",
-  "/dashboard/staff/page": "app/dashboard/staff/page.js",
-  "/dashboard/pos/page": "app/dashboard/pos/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/inventory/page": "app/dashboard/inventory/page.js"
+  "/pricing/page": "app/pricing/page.js",
+  "/dashboard/reservations/page": "app/dashboard/reservations/page.js"
 }

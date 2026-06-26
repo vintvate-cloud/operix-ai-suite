@@ -17,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${anton.variable}`}>
-      <body className="antialiased">
+    <html lang="en" className={`${inter.variable} ${anton.variable}`} suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
         <AuthProvider>
             <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-op-purple/30">
               {children}

@@ -17,7 +17,7 @@ export default function StaffPage() {
   const [successMsg, setSuccessMsg] = useState("");
   const [formData, setFormData] = useState({ name: "", email: "", password: "", role: "Front Desk", location: "" });
 
-  const roles = ["General Manager", "Front Desk", "Housekeeping", "Maintenance", "Restaurant", "Finance", "HR"];
+  const roles = ["General Manager", "Front Desk", "Housekeeping", "Maintenance", "Restaurant", "Finance", "HR", "Sales", "Marketing", "Employee"];
 
   useEffect(() => {
     if (!user) return;
