@@ -3,11 +3,12 @@
     "eslint.config.js",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "compilerOptions": {
     "target": "ES2022",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "ESNext",
     "lib": [
       "ES2022",
