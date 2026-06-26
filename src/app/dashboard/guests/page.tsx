@@ -181,7 +181,7 @@ export default function GuestsCRMPage() {
                 <div className="grid sm:grid-cols-3 gap-4 mb-8">
                   <div className="bg-muted rounded-2xl p-4 flex flex-col justify-center">
                     <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5"><TrendingUp className="h-3.5 w-3.5"/> Lifetime Spend</div>
-                    <div className="font-display text-2xl">${(selectedGuest.lifetimeSpend || 0).toFixed(2)}</div>
+                    <div className="font-display text-2xl">₹{(selectedGuest.lifetimeSpend || 0).toFixed(2)}</div>
                   </div>
                   <div className="bg-muted rounded-2xl p-4 flex flex-col justify-center">
                     <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5"><History className="h-3.5 w-3.5"/> Total Visits</div>

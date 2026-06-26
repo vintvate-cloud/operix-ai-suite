@@ -63,7 +63,7 @@ function Page() {
               <h3 className="font-display text-3xl">Billing</h3>
               <div className="bg-op-purple rounded-2xl p-5">
                 <div className="text-sm">Next invoice · Jul 1, 2026</div>
-                <div className="font-display text-4xl mt-2">$4,820</div>
+                <div className="font-display text-4xl mt-2">₹4,820</div>
               </div>
               <Field label="Payment method" value="•••• 4242 · Visa" />
             </>

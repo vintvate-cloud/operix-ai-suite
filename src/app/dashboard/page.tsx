@@ -50,7 +50,7 @@ function SuperAdminOverview() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
           { l: "Total Organizations", v: "142", sub: "+12 this month", icon: Building2 },
-          { l: "MRR", v: "$42,500", sub: "+5.2% growth", icon: DollarSign },
+          { l: "MRR", v: "₹42,500", sub: "+5.2% growth", icon: DollarSign },
           { l: "Active Users", v: "3,892", sub: "99.9% uptime", icon: Activity },
           { l: "Churn Rate", v: "1.2%", sub: "-0.4% from last month", icon: TrendingDown },
         ].map(k => (
@@ -94,9 +94,9 @@ function OwnerOverview() {
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { l: "Total Revenue", v: "$12,450", bg: "bg-op-purple text-foreground" },
-          { l: "Net Profit", v: "$3,800", bg: "bg-op-success text-emerald-950" },
-          { l: "Total Expenses", v: "$8,650", bg: "bg-op-peach text-orange-950" },
+          { l: "Total Revenue", v: "₹12,450", bg: "bg-op-purple text-foreground" },
+          { l: "Net Profit", v: "₹3,800", bg: "bg-op-success text-emerald-950" },
+          { l: "Total Expenses", v: "₹8,650", bg: "bg-op-peach text-orange-950" },
           { l: "Active Employees", v: "24", bg: "bg-muted" },
         ].map(k => (
           <div key={k.l} className={`${k.bg} rounded-3xl p-5 hover-lift shadow-sm`}>
@@ -130,9 +130,9 @@ function FinanceOverview() {
       <PageHeader eyebrow="Finance Department" title="Financial Dashboard" />
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { l: "Cash Flow", v: "+$4,200", icon: Wallet },
-          { l: "Accounts Receivable", v: "$12,500", icon: ArrowUpRight },
-          { l: "Accounts Payable", v: "$8,300", icon: TrendingDown },
+          { l: "Cash Flow", v: "+₹4,200", icon: Wallet },
+          { l: "Accounts Receivable", v: "₹12,500", icon: ArrowUpRight },
+          { l: "Accounts Payable", v: "₹8,300", icon: TrendingDown },
           { l: "Profit Margin", v: "28.4%", icon: DollarSign },
         ].map(k => (
           <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
@@ -161,7 +161,7 @@ function HROverview() {
           { l: "Headcount", v: "42", icon: Users },
           { l: "On Leave Today", v: "3", icon: Clock },
           { l: "Open Roles", v: "2", icon: Briefcase },
-          { l: "Payroll Estimate", v: "$48k", icon: Receipt },
+          { l: "Payroll Estimate", v: "₹48k", icon: Receipt },
         ].map(k => (
           <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
             <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
@@ -187,9 +187,9 @@ function SalesOverview() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
           { l: "Open Leads", v: "124", icon: UserPlus },
-          { l: "Pipeline Value", v: "$84k", icon: DollarSign },
+          { l: "Pipeline Value", v: "₹84k", icon: DollarSign },
           { l: "Win Rate", v: "32%", icon: Target },
-          { l: "Revenue Won", v: "$24k", icon: CheckCircle2 },
+          { l: "Revenue Won", v: "₹24k", icon: CheckCircle2 },
         ].map(k => (
           <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
             <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
@@ -219,7 +219,7 @@ function MarketingOverview() {
           { l: "Web Visitors", v: "4.2k", icon: Activity },
           { l: "New Leads", v: "84", icon: UserPlus },
           { l: "Conversion Rate", v: "2.1%", icon: TrendingUp },
-          { l: "Ad Spend", v: "$1.2k", icon: Megaphone },
+          { l: "Ad Spend", v: "₹1.2k", icon: Megaphone },
         ].map(k => (
           <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
             <div className="flex items-center gap-2 text-sm font-medium opacity-80 mb-4"><k.icon className="h-4 w-4" /> {k.l}</div>
@@ -303,7 +303,7 @@ function GeneralManagerOverview() {
         </div>
         <div className="bg-op-pink rounded-3xl p-5 text-foreground hover-lift shadow-sm">
           <div className="text-sm font-medium opacity-80 mb-2">Daily Revenue</div>
-          <div className="font-display text-4xl">${liveRevenue.toFixed(2)}</div>
+          <div className="font-display text-4xl">₹{liveRevenue.toFixed(2)}</div>
         </div>
         <div className="bg-op-peach rounded-3xl p-5 text-foreground hover-lift shadow-sm">
           <div className="text-sm font-medium opacity-80 mb-2">Active Guests</div>
@@ -355,7 +355,7 @@ function RestaurantOverview() {
         </div>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {[{l: "Active Tables", v: "0"}, {l: "Open Tickets", v: "0"}, {l: "Waitlist", v: "0 parties"}, {l: "Today Rev", v: "$0"}].map(k => (
+        {[{l: "Active Tables", v: "0"}, {l: "Open Tickets", v: "0"}, {l: "Waitlist", v: "0 parties"}, {l: "Today Rev", v: "₹0"}].map(k => (
           <div key={k.l} className="bg-muted rounded-3xl p-5 hover-lift">
             <div className="text-sm font-medium opacity-80">{k.l}</div>
             <div className="mt-6 font-display text-4xl">{k.v}</div>

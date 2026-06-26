@@ -232,7 +232,7 @@ export default function ReservationsAndFrontDesk() {
                   <div className="pt-4 border-t border-border mt-auto">
                     <div className="flex justify-between items-end mb-4">
                       <div className="text-xs text-muted-foreground">Total Balance <br/>(Incl. Restaurant)</div>
-                      <div className="font-display text-xl">${getRoomTotalBalance(room.number, room.balance).toFixed(2)}</div>
+                      <div className="font-display text-xl">₹{getRoomTotalBalance(room.number, room.balance).toFixed(2)}</div>
                     </div>
                     <button 
                       onClick={() => handleCheckOut(room)}
@@ -310,7 +310,7 @@ export default function ReservationsAndFrontDesk() {
                   <input type="date" required className="bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-op-purple" value={formData.checkOut} onChange={e => setFormData({...formData, checkOut: e.target.value})} />
                 </div>
                 <div className="flex flex-col gap-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-muted-foreground ml-1">Total Room Rate ($)</label>
+                  <label className="text-xs font-semibold text-muted-foreground ml-1">Total Room Rate (₹)</label>
                   <input type="number" required className="bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-op-purple text-lg font-bold" value={formData.rate} onChange={e => setFormData({...formData, rate: Number(e.target.value)})} />
                 </div>
               </div>

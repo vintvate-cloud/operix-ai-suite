@@ -178,9 +178,9 @@ export default function POSPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-semibold text-sm truncate">{item.product.name}</div>
-                <div className="text-white/50 text-xs">${item.product.price.toFixed(2)}</div>
+                <div className="text-white/50 text-xs">₹{item.product.price.toFixed(2)}</div>
               </div>
-              <div className="font-bold text-sm font-mono">${(item.product.price * item.quantity).toFixed(2)}</div>
+              <div className="font-bold text-sm font-mono">₹{(item.product.price * item.quantity).toFixed(2)}</div>
             </div>
           ))
         )}
@@ -200,10 +200,10 @@ export default function POSPage() {
         </div>
 
         <div className="space-y-1.5 text-xs font-medium pt-2 border-t border-white/5">
-          <div className="flex justify-between text-white/60"><span>Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-          <div className="flex justify-between text-white/60"><span>GST & Taxes (15%)</span><span>${(gst + serviceTax).toFixed(2)}</span></div>
+          <div className="flex justify-between text-white/60"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+          <div className="flex justify-between text-white/60"><span>GST & Taxes (15%)</span><span>₹{(gst + serviceTax).toFixed(2)}</span></div>
           <div className="flex justify-between text-xl font-display text-white pt-2 border-t border-white/10 mt-1">
-            <span>Total</span><span className="font-mono">${total.toFixed(2)}</span>
+            <span>Total</span><span className="font-mono">₹{total.toFixed(2)}</span>
           </div>
         </div>
 
@@ -300,7 +300,7 @@ export default function POSPage() {
                     <div className="font-bold text-sm text-foreground line-clamp-1 mb-1">{p.name}</div>
                     {p.description && <div className="text-xs text-muted-foreground line-clamp-2 mb-3 flex-1">{p.description}</div>}
                     <div className="text-op-purple font-mono font-bold text-sm mt-auto pt-2 border-t border-border/50 flex justify-between items-center w-full">
-                      <span>${p.price.toFixed(2)}</span>
+                      <span>₹{p.price.toFixed(2)}</span>
                       <span className="text-[10px] uppercase font-sans font-semibold text-muted-foreground bg-muted px-2 py-0.5 rounded">{p.category}</span>
                     </div>
                   </button>
@@ -325,7 +325,7 @@ export default function POSPage() {
           </div>
           <div>
             <span className="text-xs text-white/60 block">Current Order</span>
-            <span className="font-display text-xl font-bold">${total.toFixed(2)}</span>
+            <span className="font-display text-xl font-bold">₹{total.toFixed(2)}</span>
           </div>
         </div>
         <button 
@@ -360,14 +360,14 @@ export default function POSPage() {
                 <tr key={c.product.id}>
                   <td>{c.quantity}x</td>
                   <td>{c.product.name}</td>
-                  <td style={{textAlign:'right'}}>${(c.product.price * c.quantity).toFixed(2)}</td>
+                  <td style={{textAlign:'right'}}>₹{(c.product.price * c.quantity).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>
           </table>
           <hr style={{borderTop:'1px dashed black'}}/>
           <div style={{display:'flex', justifyContent:'space-between', fontWeight:'bold', fontSize:'16px'}}>
-            <span>TOTAL:</span><span>${total.toFixed(2)}</span>
+            <span>TOTAL:</span><span>₹{total.toFixed(2)}</span>
           </div>
           <hr style={{borderTop:'1px dashed black'}}/>
           <p style={{textAlign:'center', fontSize:'10px'}}>Thank you!</p>

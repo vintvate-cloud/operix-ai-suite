@@ -185,8 +185,8 @@ function AICommandCenter() {
           </div>
           <div className="mt-4 rounded-2xl border bg-background p-4 text-sm">
             <span className="text-muted-foreground">Forecast: </span>
-            Next week occupancy <strong>87%</strong> · ADR <strong>$312</strong> · RevPAR{" "}
-            <strong>$271</strong>
+            Next week occupancy <strong>87%</strong> · ADR <strong>₹312</strong> · RevPAR{" "}
+            <strong>₹271</strong>
           </div>
         </div>
       </div>
@@ -293,7 +293,7 @@ function RevenueCard() {
           <div className="flex flex-wrap items-end justify-between mb-6 gap-4">
             <div>
               <div className="text-sm text-muted-foreground">Revenue this month</div>
-              <div className="text-4xl font-semibold">$1,284,930</div>
+              <div className="text-4xl font-semibold">₹1,284,930</div>
             </div>
             <span className="px-3 py-1 bg-op-success/20 text-emerald-700 rounded-full font-semibold text-sm">
               <TrendingUp className="inline h-3.5 w-3.5 mr-1" /> +18.4%
@@ -303,7 +303,7 @@ function RevenueCard() {
             {bars.map((h, i) => (<div key={i} className="flex-1 rounded-t-2xl bg-foreground" style={{ height: `${h}%` }} />))}
           </div>
           <div className="grid grid-cols-3 mt-6 gap-3 text-sm">
-            {[{ k: "ADR", v: "$312" },{ k: "RevPAR", v: "$271" },{ k: "Occupancy", v: "87%" }].map((m) => (
+            {[{ k: "ADR", v: "₹312" },{ k: "RevPAR", v: "₹271" },{ k: "Occupancy", v: "87%" }].map((m) => (
               <div key={m.k} className="rounded-2xl bg-muted p-4">
                 <div className="text-muted-foreground">{m.k}</div>
                 <div className="text-xl font-semibold">{m.v}</div>
@@ -340,7 +340,7 @@ function GuestExperience() {
                 <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">Hi! Can I get a late checkout tomorrow?</div>
                 <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">Of course — 2 PM works for Suite 1204. Confirmed ✨</div>
                 <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">Perfect. Could you book the spa at 11?</div>
-                <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">Booked. 60-min deep tissue, $180 added to your folio.</div>
+                <div className="ml-auto bg-foreground text-background rounded-2xl rounded-tr-md px-4 py-2 max-w-[80%]">Booked. 60-min deep tissue, ₹180 added to your folio.</div>
                 <div className="bg-muted rounded-2xl rounded-tl-md px-4 py-2 max-w-[80%]">You're amazing 🙏</div>
               </div>
             </div>
@@ -471,7 +471,7 @@ function ShiftSection({ bg, text, eyebrow, title, index, total }: { bg: string; 
     if (!el) return;
     const split = (el.textContent || "").split(" ");
     el.innerHTML = split
-      .map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">${w}&nbsp;</span></span>`)
+      .map((w) => `<span class="inline-block overflow-hidden"><span class="inline-block shift-word">₹{w}&nbsp;</span></span>`)
       .join("");
     const ctx = gsap.context(() => {
       gsap.from(".shift-word", {

@@ -108,7 +108,7 @@ export default function InventoryPage() {
         </div>
         <div className="bg-card border border-border rounded-2xl p-5 hover-lift">
           <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-2"><RefreshCw className="h-4 w-4"/> Stock Value</div>
-          <div className="font-display text-3xl">${totalValue.toFixed(2)}</div>
+          <div className="font-display text-3xl">₹{totalValue.toFixed(2)}</div>
         </div>
         <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl p-5 hover-lift lg:col-span-2">
           <div className="text-xs font-semibold text-rose-500 uppercase tracking-wider mb-2 flex items-center gap-2"><AlertTriangle className="h-4 w-4"/> Low Stock Alerts</div>
@@ -180,7 +180,7 @@ export default function InventoryPage() {
                           </span>
                         )}
                       </td>
-                      <td className="p-4 text-muted-foreground">${item.costPerUnit.toFixed(2)}</td>
+                      <td className="p-4 text-muted-foreground">₹{item.costPerUnit.toFixed(2)}</td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-1">
                           {/* Quick Adjust Buttons */}
@@ -258,7 +258,7 @@ export default function InventoryPage() {
                 <input required type="number" min="0" step="any" className="bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-rose-500 font-mono" value={formData.reorderLevel} onChange={e => setFormData({...formData, reorderLevel: Number(e.target.value)})} />
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-muted-foreground ml-1">Average Cost Per Unit ($)</label>
+                <label className="text-xs font-semibold text-muted-foreground ml-1">Average Cost Per Unit (₹)</label>
                 <input required type="number" min="0" step="any" className="bg-muted border border-border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500 font-mono" value={formData.costPerUnit} onChange={e => setFormData({...formData, costPerUnit: Number(e.target.value)})} />
               </div>
 
